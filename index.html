@@ -51,7 +51,7 @@ h2{font-size:21px;margin:20px 2px 5px;color:var(--forest)}.sub{margin:0 2px 14px
   <div class="admin-head"><div><h2 style="margin-top:0">🔐 অ্যাডমিন প্যানেল</h2><p class="sub">শুধু অনুমোদিত অ্যাডমিন অ্যাকাউন্ট দিয়ে প্রবেশ করুন।</p></div><button class="action secondary" style="width:auto;margin:0" onclick="backToShop()">দোকানে ফিরুন</button></div>
   <div id="adminLogin"><div class="field"><label for="adminEmail">অ্যাডমিন ইমেইল</label><input id="adminEmail" type="email" autocomplete="username" placeholder="আপনার অ্যাডমিন ইমেইল"></div><div class="field" style="margin-top:10px"><label for="adminPassword">পাসওয়ার্ড</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="পাসওয়ার্ড"></div><button class="action primary" onclick="adminLogin()">অ্যাডমিন লগইন</button><p class="small">প্রথমে Firebase Console → Authentication থেকে আপনার অ্যাডমিন ইমেইল/পাসওয়ার্ড অ্যাকাউন্ট তৈরি করুন।</p></div>
   <div id="adminArea" class="hidden"><div class="admin-head"><span id="adminWho" class="small"></span><button class="action secondary" style="width:auto;margin:0" onclick="adminLogout()">লগআউট</button></div>
-   <div class="card"><h2 style="margin-top:0">🎉 অর্ডার সফলতার গ্রিটিং মেসেজ</h2><p class="small">অর্ডার জমা হওয়ার পর কাস্টমার এই বার্তাটি দেখবেন।</p><div class="field"><label for="greetingText">গ্রিটিং মেসেজ</label><textarea id="greetingText" rows="3" maxlength="1000" placeholder="আপনার অর্ডারের জন্য ধন্যবাদ!"></textarea></div><button class="action primary" type="button" onclick="saveGreeting()">গ্রিটিং সংরক্ষণ করুন</button></div>
+   <div class="card"><h2 style="margin-top:0">🎉 অর্ডার সফলতার গ্রিটিং মেসেজ</h2><p class="small">অর্ডার জমা হওয়ার পর কাস্টমার এই বার্তাটি দেখবেন।</p><div class="field"><label for="greetingText">গ্রিটিং মেসেজ</label><textarea id="greetingText" rows="3" maxlength="1000" placeholder="আপনার অর্ডারের জন্য ধন্যবাদ!"></textarea></div><button class="action primary" type="button" onclick="saveGreeting()">গ্রিটিং সংরক্ষণ করুন</button><p id="greetingStatus" class="small" aria-live="polite"></p></div>
     <div class="admin-tabs"><button id="tabOrders" class="active" onclick="adminTab('orders')">অর্ডার</button><button id="tabProducts" onclick="adminTab('products')">মেনু ও স্টক</button></div>
    <div id="adminOrders"><div class="admin-head"><h2 style="margin:5px 0">নতুন ও পুরোনো অর্ডার</h2><button class="action secondary" style="width:auto;margin:0" onclick="loadOrders()">রিফ্রেশ</button></div><div id="ordersList">অর্ডার লোড হচ্ছে…</div></div>
    <div id="adminProducts" class="hidden"><h2 style="margin-top:6px">খাবার যোগ / সম্পাদনা</h2><form id="productForm" onsubmit="saveProduct(event)"><input id="editProductId" type="hidden"><div class="admin-form"><div class="field"><label>খাবারের নাম</label><input id="prodName" required maxlength="100"></div><div class="field"><label>দাম (₹)</label><input id="prodPrice" type="number" min="0" max="100000" step="1" required></div><div class="field"><label>স্টক সংখ্যা</label><input id="prodStock" type="number" min="0" max="100000" step="1" value="100" required></div><div class="field"><label>ছবির URL (ঐচ্ছিক)</label><input id="prodImage" type="url" placeholder="https://..."></div></div><label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="prodRequired" type="checkbox" style="width:auto"> বাধ্যতামূলক খাবার (যেমন সবজি ভাত)</label><button class="action primary" type="submit">খাবার সংরক্ষণ করুন</button><button class="action secondary" type="button" onclick="resetProductForm()">নতুন খাবার / ফর্ম পরিষ্কার</button></form><h2>বর্তমান মেনু</h2><div id="productsList">মেনু লোড হচ্ছে…</div></div>
@@ -95,15 +95,49 @@ function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","
 function money(n){return "₹"+Number(n||0)}
 const DEFAULT_GREETING="ধন্যবাদ! আপনার অর্ডার সফলভাবে জমা হয়েছে।";
 async function loadGreeting(){
- try{const snap=await getDoc(doc(db,"settings","orderGreeting"));const msg=snap.exists()?snap.data().message:DEFAULT_GREETING;
- $("successGreeting").textContent=msg;$("greetingText").value=msg;
- }catch(e){$("successGreeting").textContent=DEFAULT_GREETING;if($("greetingText"))$("greetingText").value=DEFAULT_GREETING}
+ try{
+   const snap=await getDoc(doc(db,"settings","orderGreeting"));
+   const msg=(snap.exists() && typeof snap.data().message==="string" && snap.data().message.trim())?snap.data().message:DEFAULT_GREETING;
+   $("successGreeting").textContent=msg;
+   if($("greetingText")) $("greetingText").value=msg;
+ }catch(e){
+   console.error("loadGreeting:",e);
+   $("successGreeting").textContent=DEFAULT_GREETING;
+   if($("greetingText")) $("greetingText").value=DEFAULT_GREETING;
+   if($("greetingStatus")) $("greetingStatus").textContent="আগের মেসেজ পড়া যায়নি: "+(e.code||e.message||"অজানা সমস্যা");
+ }
 }
 window.saveGreeting=async()=>{
  if(!auth.currentUser)return notify("প্রথমে অ্যাডমিন লগইন করুন।","err");
- const message=$("greetingText").value.trim();if(!message)return notify("গ্রিটিং মেসেজ লিখুন।","err");
- try{await setDoc(doc(db,"settings","orderGreeting"),{message,updatedAt:serverTimestamp()});$("successGreeting").textContent=message;notify("গ্রিটিং মেসেজ সংরক্ষণ হয়েছে।")}
- catch(e){notify("গ্রিটিং সংরক্ষণ হয়নি। Firestore Rules পরীক্ষা করুন।","err")}
+ const message=$("greetingText").value.trim();
+ if(!message)return notify("গ্রিটিং মেসেজ লিখুন।","err");
+ const btn=document.querySelector('button[onclick="saveGreeting()"]');
+ if(btn){btn.disabled=true;btn.textContent="সংরক্ষণ হচ্ছে…";}
+ try{
+   await setDoc(doc(db,"settings","orderGreeting"),{message,updatedAt:serverTimestamp()},{merge:true});
+   $("successGreeting").textContent=message;
+   if($("greetingStatus")) $("greetingStatus").textContent="সর্বশেষ সংরক্ষণ সফল হয়েছে।";
+   notify("গ্রিটিং মেসেজ সংরক্ষণ হয়েছে।");
+ }catch(e){
+   console.error("saveGreeting:",e);
+   const detail=e.code||e.message||"অজানা সমস্যা";
+   if($("greetingStatus")) $("greetingStatus").textContent="সংরক্ষণ হয়নি: "+detail;
+   notify("গ্রিটিং সংরক্ষণ হয়নি: "+detail,"err");
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent="গ্রিটিং সংরক্ষণ করুন";}
+ }
+}
+function formatOrderDate(o){
+ const raw=o.createdAt;
+ let d=null;
+ try{
+   if(raw && typeof raw.toDate==="function") d=raw.toDate();
+   else if(raw && typeof raw.seconds==="number") d=new Date(raw.seconds*1000);
+   else if(typeof raw==="string" || typeof raw==="number") d=new Date(raw);
+   if((!d || Number.isNaN(d.getTime())) && o.createdAtClient) d=new Date(o.createdAtClient);
+ }catch(e){ if(o.createdAtClient) d=new Date(o.createdAtClient); }
+ if(!d || Number.isNaN(d.getTime())) return "তারিখ/সময় নেই (পুরোনো অর্ডার)";
+ return new Intl.DateTimeFormat("bn-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true,timeZone:"Asia/Kolkata"}).format(d);
 }
 async function loadProducts(){
  const menuBox=$("items");
@@ -163,7 +197,28 @@ window.submitOrder=async ev=>{
 };
 window.openAdmin=()=>{$("shop").classList.add("hidden");$("admin").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})};
 window.backToShop=()=>{$("admin").classList.add("hidden");$("shop").classList.remove("hidden");$("orderSuccess").classList.add("hidden");window.scrollTo({top:0,behavior:"smooth"})};
-window.adminLogin=async()=>{try{await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);notify("লগইন সফল।","ok")}catch(e){notify("লগইন হয়নি: ইমেইল/পাসওয়ার্ড এবং Firebase Authentication পরীক্ষা করুন।","err")}};
+window.adminLogin=async()=>{
+ const email=$("adminEmail").value.trim(),password=$("adminPassword").value;
+ if(!email||!password){notify("অ্যাডমিন ইমেইল ও পাসওয়ার্ড লিখুন।","err");return}
+ try{
+  await signInWithEmailAndPassword(auth,email,password);
+  notify("লগইন সফল।","ok");
+ }catch(e){
+  console.error("Admin login error:",e);
+  const code=e?.code||"unknown";
+  const messages={
+   "auth/invalid-credential":"ইমেইল বা পাসওয়ার্ড ভুল। Firebase Authentication-এ অ্যাকাউন্টটি আছে কি না পরীক্ষা করুন।",
+   "auth/user-not-found":"এই ইমেইলে অ্যাডমিন অ্যাকাউন্ট পাওয়া যায়নি।",
+   "auth/wrong-password":"পাসওয়ার্ড ভুল।",
+   "auth/invalid-email":"ইমেইল ঠিকানাটি সঠিক নয়।",
+   "auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+   "auth/network-request-failed":"ইন্টারনেট বা Firebase সংযোগে সমস্যা।",
+   "auth/operation-not-allowed":"Firebase Console → Authentication → Sign-in method-এ Email/Password চালু করুন।",
+   "auth/unauthorized-domain":"Firebase Authentication-এর Authorized domains-এ ওয়েবসাইটের ডোমেইন যোগ করুন।"
+  };
+  notify((messages[code]||("অ্যাডমিন লগইন ব্যর্থ ("+code+")। Firebase Console-এর Authentication এবং Authorized domains পরীক্ষা করুন।")),"err");
+ }
+};
 window.adminLogout=async()=>{await signOut(auth);notify("অ্যাডমিন লগআউট হয়েছে।")};
 onAuthStateChanged(auth,async user=>{
  isAdmin=!!user;
@@ -172,10 +227,31 @@ onAuthStateChanged(auth,async user=>{
 });
 window.adminTab=tab=>{$("adminOrders").classList.toggle("hidden",tab!=="orders");$("adminProducts").classList.toggle("hidden",tab!=="products");$("tabOrders").classList.toggle("active",tab==="orders");$("tabProducts").classList.toggle("active",tab==="products")};
 window.loadOrders=async()=>{
- if(!auth.currentUser)return;$("ordersList").textContent="অর্ডার লোড হচ্ছে…";
- try{const snap=await getDocs(query(collection(db,"orders"),orderBy("createdAt","desc")));if(!snap.size){$("ordersList").innerHTML="<p>এখনও কোনো অর্ডার আসেনি।</p>";return}
- $("ordersList").innerHTML=snap.docs.map(d=>{const o=d.data(),c=o.customer||{},items=o.items||[];return `<div class="order"><div class="order-top"><b>অর্ডার #${escapeHtml(d.id.slice(-8))}</b><span class="pill">${escapeHtml(o.status||"নতুন অর্ডার")}</span></div><p><b>${escapeHtml(c.name||"")}</b> · ${escapeHtml(c.phone||"")}<br>${escapeHtml(c.house||"")}, ${escapeHtml(c.area||"")}, ${escapeHtml(c.landmark||"")}, ${escapeHtml(c.city||"কাটোয়া")} ${escapeHtml(c.pin||"713130")}</p><div>${items.map(i=>`${escapeHtml(i.name)} × ${i.qty} = ${money(i.subtotal)}`).join("<br>")}</div><p><b>মোট: ${money(o.total)}</b></p><div class="grid"><div class="field"><label>অর্ডারের অবস্থা</label><select id="status-${d.id}">${["নতুন অর্ডার","গ্রহণ করা হয়েছে","রান্না হচ্ছে","ডেলিভারির জন্য বেরিয়েছে","সম্পন্ন","বাতিল"].map(s=>`<option ${o.status===s?"selected":""}>${s}</option>`).join("")}</select></div><div class="field"><label>&nbsp;</label><button class="action primary" style="margin:0" onclick="updateOrderStatus('${d.id}')">অবস্থা সংরক্ষণ</button></div></div><p class="small">অর্ডার ID: ${escapeHtml(d.id)}</p></div>`}).join("");
- }catch(e){console.error(e);$("ordersList").innerHTML='<p class="status err">অর্ডার পড়া যাচ্ছে না। Firestore Rules-এ admin UID সঠিক আছে কি না পরীক্ষা করুন।</p>'}
+ if(!auth.currentUser)return;
+ $("ordersList").textContent="অর্ডার লোড হচ্ছে…";
+ try{
+   let docs=[];
+   try{
+     const snap=await getDocs(query(collection(db,"orders"),orderBy("createdAt","desc")));
+     docs=snap.docs;
+   }catch(sortError){
+     console.warn("Order date sort fallback:",sortError);
+     const snap=await getDocs(collection(db,"orders"));
+     docs=snap.docs;
+   }
+   if(!docs.length){$("ordersList").innerHTML="<p>এখনও কোনো অর্ডার আসেনি।</p>";return}
+   docs.sort((a,b)=>{
+     const getMs=o=>{const x=o.createdAt;if(x&&typeof x.toMillis==="function")return x.toMillis();if(x&&typeof x.seconds==="number")return x.seconds*1000;const v=o.createdAtClient?Date.parse(o.createdAtClient):0;return Number.isFinite(v)?v:0};
+     return getMs(b.data())-getMs(a.data());
+   });
+   $("ordersList").innerHTML=docs.map(d=>{
+     const o=d.data(),c=o.customer||{},items=o.items||[];
+     return `<div class="order"><div class="order-top"><b>অর্ডার #${escapeHtml(d.id.slice(-8))}</b><span class="pill">${escapeHtml(o.status||"নতুন অর্ডার")}</span></div><p><b>📅 অর্ডারের তারিখ ও সময়:</b> ${escapeHtml(formatOrderDate(o))}</p><p><b>${escapeHtml(c.name||"")}</b> · ${escapeHtml(c.phone||"")}<br>${escapeHtml(c.house||"")}, ${escapeHtml(c.area||"")}, ${escapeHtml(c.landmark||"")}, ${escapeHtml(c.city||"কাটোয়া")} ${escapeHtml(c.pin||"713130")}</p><div>${items.map(i=>`${escapeHtml(i.name)} × ${i.qty} = ${money(i.subtotal)}`).join("<br>")}</div><p><b>মোট: ${money(o.total)}</b></p><div class="grid"><div class="field"><label>অর্ডারের অবস্থা</label><select id="status-${d.id}">${["নতুন অর্ডার","গ্রহণ করা হয়েছে","রান্না হচ্ছে","ডেলিভারির জন্য বেরিয়েছে","সম্পন্ন","বাতিল"].map(st=>`<option ${o.status===st?"selected":""}>${st}</option>`).join("")}</select></div><div class="field"><label>&nbsp;</label><button class="action primary" style="margin:0" onclick="updateOrderStatus('${d.id}')">অবস্থা সংরক্ষণ</button></div></div><p class="small">অর্ডার ID: ${escapeHtml(d.id)}</p></div>`;
+   }).join("");
+ }catch(e){
+   console.error("loadOrders:",e);
+   $("ordersList").innerHTML='<p class="status err">অর্ডার পড়া যাচ্ছে না: '+escapeHtml(e.code||e.message||"Firestore Rules পরীক্ষা করুন।")+'</p>';
+ }
 };
 window.updateOrderStatus=async id=>{if(!auth.currentUser)return;try{await updateDoc(doc(db,"orders",id),{status:$("status-"+id).value,updatedAt:serverTimestamp()});notify("অর্ডারের অবস্থা আপডেট হয়েছে।");await loadOrders()}catch(e){notify("আপডেট হয়নি। Firestore Rules পরীক্ষা করুন।","err")}};
 window.loadAdminProducts=async()=>{if(!auth.currentUser)return;try{const snap=await getDocs(query(collection(db,"products"),orderBy("sort")));const list=snap.docs.map(d=>({id:d.id,...d.data()}));$("productsList").innerHTML=list.length?list.map(p=>`<div class="order"><div class="order-top"><b>${escapeHtml(p.name)}</b><span>${money(p.price)} · স্টক ${p.stock}</span></div><p class="small">${p.active===false?"ওয়েবসাইটে লুকানো":"ওয়েবসাইটে দেখানো"} ${p.required?"· বাধ্যতামূলক":""}</p><div class="grid"><button class="action secondary" style="margin:0" onclick="editProduct('${p.id}')">সম্পাদনা</button><button class="action ${p.active===false?"primary":"danger"}" style="margin:0" onclick="toggleProduct('${p.id}',${p.active===false?"true":"false"})">${p.active===false?"আবার দেখান":"লুকান"}</button></div></div>`).join(""):'<p>মেনু খালি। ডিফল্ট মেনু তৈরি করুন।</p><button class="action primary" onclick="seedMenu()">ডিফল্ট মেনু তৈরি করুন</button>'}catch(e){$("productsList").innerHTML='<p class="status err">মেনু পড়া যাচ্ছে না। Rules পরীক্ষা করুন।</p>'}};
