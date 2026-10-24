@@ -190,8 +190,14 @@ window.submitOrder=async ev=>{
  const total=lines.reduce((s,x)=>s+x.subtotal,0);btn.disabled=true;btn.textContent="অর্ডার জমা হচ্ছে…";
  try{
    const orderRef=await addDoc(collection(db,"orders"),{customer,items:lines,total,deliveryFee:0,packagingFee:0,status:"নতুন অর্ডার",createdAt:serverTimestamp(),createdAtClient:new Date().toISOString()});
-   $("orderForm").reset();quantities={};products.forEach(p=>quantities[p.id]=p.required?1:0);renderMenu();showPage("page-menu",1);
-   notify("অর্ডার সফলভাবে জমা হয়েছে! আপনার অর্ডার নম্বর: "+orderRef.id);
+   $("orderForm").reset();
+   $("successOrderId").textContent=orderRef.id;
+   $("shop").classList.add("hidden");
+   $("admin").classList.add("hidden");
+   $("orderSuccess").classList.remove("hidden");
+   await loadGreeting();
+   window.scrollTo({top:0,behavior:"smooth"});
+   notify("অর্ডার সফলভাবে জমা হয়েছে!");
  }catch(e){console.error(e);notify("অর্ডার জমা হয়নি। ইন্টারনেট, Firebase ও Firestore Rules পরীক্ষা করুন।","err")}
  finally{btn.disabled=false;btn.textContent="ওয়েবসাইটে অর্ডার জমা দিন"}
 };
