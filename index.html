@@ -26,26 +26,33 @@ h2{font-size:21px;margin:20px 2px 5px;color:var(--forest)}.sub{margin:0 2px 14px
 <main>
 <div id="notice" class="status hidden"></div>
 <section id="shop">
- <div class="note"><b>🛵 আজকের ডেলিভারি সময়</b><br>আমরা দুপুর 1 টা থেকে 2টো 15 এর মধ্যে ডেলিভারি দেবো।</div>
  <div class="steps"><div id="s1" class="step active">1 · খাবার</div><div id="s2" class="step">2 · বিল</div><div id="s3" class="step">3 · ঠিকানা</div></div>
  <section id="page-menu" class="page active"><h2>🍽️ খাবারের তালিকা</h2><p class="sub">সবজি ভাত বাধ্যতামূলক; অন্য খাবার ইচ্ছেমতো যোগ করুন।</p><div id="items" class="items"><p>মেনু লোড হচ্ছে…</p></div><button class="action primary" onclick="showBill()">নেক্সট: বিল দেখুন →</button></section>
  <section id="page-bill" class="page"><h2>আপনার অর্ডারের বিল</h2><p class="sub">অর্ডার নিশ্চিত করার আগে খাবার ও মোট দাম দেখে নিন।</p><div class="card" id="billItems"></div><div class="card"><div class="total"><span>খাবারের দাম</span><b id="billFood">₹55</b></div><div class="total"><span>ডেলিভারি ফি</span><b>₹0</b></div><div class="total"><span>প্যাকেজিং চার্জ</span><b>₹0</b></div><div class="total grand"><span>সর্বমোট</span><strong id="billTotal">₹55</strong></div></div><button class="action primary" onclick="showPage('page-address',3)">নেক্সট: ঠিকানা →</button><button class="action secondary" onclick="showPage('page-menu',1)">← মেনুতে ফিরে যান</button></section>
- <section id="page-address" class="page"><h2>ডেলিভারির ঠিকানা</h2><p class="sub">অর্ডারটি সরাসরি ওয়েবসাইটে জমা হবে—WhatsApp খুলবে না।</p><form id="orderForm" class="card" onsubmit="submitOrder(event)"><div class="grid">
+ <section id="page-address" class="page"><h2>ডেলিভারির ঠিকানা</h2><form id="orderForm" class="card" onsubmit="submitOrder(event)"><div class="grid">
  <div class="field full"><label for="custName">পুরো নাম *</label><input id="custName" required placeholder="আপনার নাম" maxlength="100"></div>
  <div class="field full"><label for="custPhone">ফোন নম্বর *</label><input id="custPhone" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required placeholder="১০ সংখ্যার ফোন নম্বর"></div>
  <div class="field full"><label for="house">হাউস / ফ্ল্যাট / বিল্ডিংয়ের নাম *</label><input id="house" required maxlength="150" placeholder="বাড়ি, ফ্ল্যাট বা বিল্ডিংয়ের নাম"></div>
  <div class="field full"><label for="area">পাড়ার নাম *</label><input id="area" required maxlength="100" placeholder="পাড়ার নাম"></div>
  <div class="field full"><label for="landmark">ল্যান্ডমার্ক *</label><input id="landmark" required maxlength="150" placeholder="কাছের পরিচিত জায়গা"></div>
  <div class="field"><label>শহর</label><input value="কাটোয়া" readonly></div><div class="field"><label>পিনকোড</label><input value="713130" readonly></div>
- </div><button id="placeOrderBtn" class="action primary" type="submit">ওয়েবসাইটে অর্ডার জমা দিন</button><p class="small">অর্ডার জমা হলে আপনার অর্ডার নম্বর দেখানো হবে। পরে OTP লগইন যোগ করা যাবে।</p></form><button class="action secondary" onclick="showPage('page-bill',2)">← বিলে ফিরে যান</button></section>
+ </div><button id="placeOrderBtn" class="action primary" type="submit">ওয়েবসাইটে অর্ডার জমা দিন</button></form><button class="action secondary" onclick="showPage('page-bill',2)">← বিলে ফিরে যান</button></section>
 </section>
+<section id="orderSuccess" class="card hidden">
+ <h2 style="margin-top:0">🎉 Order Has Been Placed!</h2>
+ <p id="successGreeting">ধন্যবাদ! আপনার অর্ডার সফলভাবে জমা হয়েছে।</p>
+ <p>আপনার অর্ডার নম্বর:</p><p><b id="successOrderId"></b></p>
+ <button class="action secondary" type="button" onclick="backToShop()">দোকানে ফিরুন</button>
+</section>
+
 
 <section id="admin" class="hidden">
  <div class="card">
   <div class="admin-head"><div><h2 style="margin-top:0">🔐 অ্যাডমিন প্যানেল</h2><p class="sub">শুধু অনুমোদিত অ্যাডমিন অ্যাকাউন্ট দিয়ে প্রবেশ করুন।</p></div><button class="action secondary" style="width:auto;margin:0" onclick="backToShop()">দোকানে ফিরুন</button></div>
   <div id="adminLogin"><div class="field"><label for="adminEmail">অ্যাডমিন ইমেইল</label><input id="adminEmail" type="email" autocomplete="username" placeholder="আপনার অ্যাডমিন ইমেইল"></div><div class="field" style="margin-top:10px"><label for="adminPassword">পাসওয়ার্ড</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="পাসওয়ার্ড"></div><button class="action primary" onclick="adminLogin()">অ্যাডমিন লগইন</button><p class="small">প্রথমে Firebase Console → Authentication থেকে আপনার অ্যাডমিন ইমেইল/পাসওয়ার্ড অ্যাকাউন্ট তৈরি করুন।</p></div>
   <div id="adminArea" class="hidden"><div class="admin-head"><span id="adminWho" class="small"></span><button class="action secondary" style="width:auto;margin:0" onclick="adminLogout()">লগআউট</button></div>
-   <div class="admin-tabs"><button id="tabOrders" class="active" onclick="adminTab('orders')">অর্ডার</button><button id="tabProducts" onclick="adminTab('products')">মেনু ও স্টক</button></div>
+   <div class="card"><h2 style="margin-top:0">🎉 অর্ডার সফলতার গ্রিটিং মেসেজ</h2><p class="small">অর্ডার জমা হওয়ার পর কাস্টমার এই বার্তাটি দেখবেন।</p><div class="field"><label for="greetingText">গ্রিটিং মেসেজ</label><textarea id="greetingText" rows="3" maxlength="1000" placeholder="আপনার অর্ডারের জন্য ধন্যবাদ!"></textarea></div><button class="action primary" type="button" onclick="saveGreeting()">গ্রিটিং সংরক্ষণ করুন</button></div>
+    <div class="admin-tabs"><button id="tabOrders" class="active" onclick="adminTab('orders')">অর্ডার</button><button id="tabProducts" onclick="adminTab('products')">মেনু ও স্টক</button></div>
    <div id="adminOrders"><div class="admin-head"><h2 style="margin:5px 0">নতুন ও পুরোনো অর্ডার</h2><button class="action secondary" style="width:auto;margin:0" onclick="loadOrders()">রিফ্রেশ</button></div><div id="ordersList">অর্ডার লোড হচ্ছে…</div></div>
    <div id="adminProducts" class="hidden"><h2 style="margin-top:6px">খাবার যোগ / সম্পাদনা</h2><form id="productForm" onsubmit="saveProduct(event)"><input id="editProductId" type="hidden"><div class="admin-form"><div class="field"><label>খাবারের নাম</label><input id="prodName" required maxlength="100"></div><div class="field"><label>দাম (₹)</label><input id="prodPrice" type="number" min="0" max="100000" step="1" required></div><div class="field"><label>স্টক সংখ্যা</label><input id="prodStock" type="number" min="0" max="100000" step="1" value="100" required></div><div class="field"><label>ছবির URL (ঐচ্ছিক)</label><input id="prodImage" type="url" placeholder="https://..."></div></div><label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="prodRequired" type="checkbox" style="width:auto"> বাধ্যতামূলক খাবার (যেমন সবজি ভাত)</label><button class="action primary" type="submit">খাবার সংরক্ষণ করুন</button><button class="action secondary" type="button" onclick="resetProductForm()">নতুন খাবার / ফর্ম পরিষ্কার</button></form><h2>বর্তমান মেনু</h2><div id="productsList">মেনু লোড হচ্ছে…</div></div>
   </div>
@@ -86,13 +93,50 @@ const $=id=>document.getElementById(id);
 function notify(msg,type="ok"){const n=$("notice");n.textContent=msg;n.className="status "+(type==="err"?"err":"ok");n.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>n.classList.add("hidden"),7000)}
 function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function money(n){return "₹"+Number(n||0)}
+const DEFAULT_GREETING="ধন্যবাদ! আপনার অর্ডার সফলভাবে জমা হয়েছে।";
+async function loadGreeting(){
+ try{const snap=await getDoc(doc(db,"settings","orderGreeting"));const msg=snap.exists()?snap.data().message:DEFAULT_GREETING;
+ $("successGreeting").textContent=msg;$("greetingText").value=msg;
+ }catch(e){$("successGreeting").textContent=DEFAULT_GREETING;if($("greetingText"))$("greetingText").value=DEFAULT_GREETING}
+}
+window.saveGreeting=async()=>{
+ if(!auth.currentUser)return notify("প্রথমে অ্যাডমিন লগইন করুন।","err");
+ const message=$("greetingText").value.trim();if(!message)return notify("গ্রিটিং মেসেজ লিখুন।","err");
+ try{await setDoc(doc(db,"settings","orderGreeting"),{message,updatedAt:serverTimestamp()});$("successGreeting").textContent=message;notify("গ্রিটিং মেসেজ সংরক্ষণ হয়েছে।")}
+ catch(e){notify("গ্রিটিং সংরক্ষণ হয়নি। Firestore Rules পরীক্ষা করুন।","err")}
+}
 async function loadProducts(){
- try{const snap=await getDocs(query(collection(db,"products"),orderBy("sort")));products=snap.docs.map(d=>({id:d.id,...d.data()}));}
- catch(e){console.error(e);products=[];notify("মেনু লোড হয়নি। Firebase সেটআপ ও Firestore Rules পরীক্ষা করুন।", "err")}
- if(!products.length){$("items").innerHTML='<div class="card">মেনু এখনও সেটআপ হয়নি। মালিক প্রথমবার অ্যাডমিন প্যানেলে লগইন করে “ডিফল্ট মেনু তৈরি করুন” চাপুন।</div>';return}
- products=products.filter(p=>p.active!==false);products.sort((a,b)=>(a.sort||0)-(b.sort||0));
- products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
- renderMenu();
+ const menuBox=$("items");
+ menuBox.innerHTML='<div class="card">🍽️ মেনু লোড হচ্ছে…</div>';
+ products=[];
+ try{
+   let snap;
+   try{
+     // Preferred query: products ordered by the configured sort field.
+     snap=await getDocs(query(collection(db,"products"),orderBy("sort")));
+   }catch(firstError){
+     console.warn("Sorted product query failed; trying a basic query.",firstError);
+     // Fallback: this can still work if the sort field/query is the issue.
+     snap=await getDocs(collection(db,"products"));
+   }
+   products=snap.docs.map(d=>({id:d.id,...d.data()}));
+   if(!products.length){
+     menuBox.innerHTML='<div class="card">মেনুতে এখনও খাবার যোগ করা হয়নি। অ্যাডমিন প্যানেলে লগইন করে “মেনু ও স্টক” অংশ থেকে ডিফল্ট মেনু তৈরি করুন।</div>';
+     return;
+   }
+   products=products.filter(p=>p.active!==false);
+   products.sort((a,b)=>(Number(a.sort)||0)-(Number(b.sort)||0));
+   products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
+   renderMenu();
+ }catch(e){
+   console.error("Menu loading error:",e);
+   let msg="মেনু লোড হয়নি। ইন্টারনেট সংযোগ এবং Firebase Firestore Rules পরীক্ষা করুন।";
+   if(e?.code==="permission-denied")msg="Firebase অনুমতি দেয়নি (permission-denied)। Firestore Rules-এ products পড়ার অনুমতি পরীক্ষা করুন।";
+   else if(e?.code==="unavailable")msg="Firebase সার্ভার এখন পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।";
+   else if(e?.code==="unauthenticated")msg="Firebase সংযোগ যাচাই করা যায়নি। পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।";
+   menuBox.innerHTML='<div class="card"><b>⚠️ মেনু লোড করা যায়নি</b><p>'+escapeHtml(msg)+'</p><button class="action primary" type="button" onclick="loadProducts()">আবার চেষ্টা করুন</button></div>';
+   notify(msg,"err");
+ }
 }
 function renderMenu(){
  const active=products.filter(p=>p.active!==false);
@@ -118,13 +162,13 @@ window.submitOrder=async ev=>{
  finally{btn.disabled=false;btn.textContent="ওয়েবসাইটে অর্ডার জমা দিন"}
 };
 window.openAdmin=()=>{$("shop").classList.add("hidden");$("admin").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})};
-window.backToShop=()=>{$("admin").classList.add("hidden");$("shop").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})};
+window.backToShop=()=>{$("admin").classList.add("hidden");$("shop").classList.remove("hidden");$("orderSuccess").classList.add("hidden");window.scrollTo({top:0,behavior:"smooth"})};
 window.adminLogin=async()=>{try{await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);notify("লগইন সফল।","ok")}catch(e){notify("লগইন হয়নি: ইমেইল/পাসওয়ার্ড এবং Firebase Authentication পরীক্ষা করুন।","err")}};
 window.adminLogout=async()=>{await signOut(auth);notify("অ্যাডমিন লগআউট হয়েছে।")};
 onAuthStateChanged(auth,async user=>{
  isAdmin=!!user;
  $("adminLogin").classList.toggle("hidden",!!user);$("adminArea").classList.toggle("hidden",!user);
- if(user){$("adminWho").textContent="লগইন: "+user.email;await loadOrders();await loadAdminProducts()}
+ if(user){$("adminWho").textContent="লগইন: "+user.email;await loadOrders();await loadAdminProducts();await loadGreeting()}
 });
 window.adminTab=tab=>{$("adminOrders").classList.toggle("hidden",tab!=="orders");$("adminProducts").classList.toggle("hidden",tab!=="products");$("tabOrders").classList.toggle("active",tab==="orders");$("tabProducts").classList.toggle("active",tab==="products")};
 window.loadOrders=async()=>{
@@ -140,6 +184,6 @@ window.saveProduct=async ev=>{ev.preventDefault();if(!auth.currentUser)return;co
 window.editProduct=async id=>{const p=products.find(x=>x.id===id);if(!p)return;$("editProductId").value=id;$("prodName").value=p.name;$("prodPrice").value=p.price;$("prodStock").value=p.stock;$("prodImage").value=p.image||"";$("prodRequired").checked=!!p.required;window.scrollTo({top:$("productForm").getBoundingClientRect().top+window.scrollY-20,behavior:"smooth"})};
 window.toggleProduct=async(id,active)=>{try{await updateDoc(doc(db,"products",id),{active,updatedAt:serverTimestamp()});notify("মেনু আপডেট হয়েছে।");await loadProducts();await loadAdminProducts()}catch(e){notify("পরিবর্তন করা যায়নি।","err")}};
 window.resetProductForm=()=>{$("productForm").reset();$("editProductId").value="";$("prodStock").value=100};
-window.addEventListener("load",loadProducts);
+window.addEventListener("load",()=>{loadProducts();loadGreeting()});
 </script>
 </body></html>
