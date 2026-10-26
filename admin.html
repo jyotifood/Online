@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173d2c">
+<title>জ্যোতি হোম ডেলিভারি</title>
+<style>
+:root{--forest:#123d2b;--forest2:#1e6242;--leaf:#2c8054;--gold:#f1c66d;--cream:#f7f7f1;--paper:#fff;--ink:#20332a;--muted:#6c7a70;--line:#e4e9df;--soft:#edf5ee;--shadow:0 10px 30px rgba(24,58,39,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,"Noto Sans Bengali",sans-serif;line-height:1.5}
+header{min-height:220px;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px 16px 38px;color:#fff;background:linear-gradient(135deg,rgba(9,43,28,.96),rgba(22,83,53,.83)),url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1400&q=85') center/cover;border-radius:0 0 30px 30px}
+.brand-mark{width:52px;height:52px;margin:0 auto 9px;display:grid;place-items:center;border:1px solid #f1c66d;border-radius:17px;background:#ffffff18;font-size:27px}.eyebrow{color:#f7d993;font-size:11px;font-weight:800;letter-spacing:1.5px}h1{font-size:clamp(27px,5vw,39px);margin:8px 0}header p{margin:0;color:#e4efe6;font-size:14px}
+main{max-width:800px;margin:-20px auto 0;padding:0 13px 28px;position:relative}.note{background:#fff8e8;border:1px solid #f0d79b;color:#614714;border-radius:15px;padding:13px 15px;margin-bottom:17px}
+h2{font-size:21px;margin:20px 2px 5px;color:var(--forest)}.sub{margin:0 2px 14px;color:var(--muted);font-size:13px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:9px;background:#ffffffcc;border:1px solid var(--line);border-radius:15px;margin-bottom:17px}.step{text-align:center;padding:8px 3px;border-radius:9px;color:#819087;font-size:12px;font-weight:bold}.step.active{background:var(--soft);color:var(--forest)}
+.page{display:none}.page.active{display:block}.items{display:grid;gap:10px}.item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:11px;box-shadow:0 3px 10px #19342406}.food-icon{width:80px;height:75px;object-fit:cover;border-radius:12px;background:#edf0e9}.info{flex:1;min-width:0}.name{font-weight:800;font-size:15px}.price{font-weight:800;color:var(--forest2);font-size:18px}.stock{font-size:11px;color:var(--muted)}.qty{display:flex;align-items:center;gap:6px;background:#f6f8f4;border:1px solid #e7ece4;padding:4px;border-radius:11px}.qty button{width:29px;height:29px;border:0;border-radius:8px;background:#e4efe5;color:var(--forest);font-size:20px;font-weight:bold}.qty button:disabled{opacity:.4}
+.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:15px;margin-top:13px;box-shadow:var(--shadow)}.total{display:flex;justify-content:space-between;gap:12px;padding:6px 0}.grand{border-top:1px solid var(--line);padding-top:12px;font-size:18px;font-weight:bold}.grand strong{font-size:25px;color:var(--forest)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:5px}.full{grid-column:1/-1}label{font-size:13px;font-weight:800;color:#334b3a}input,select,textarea{width:100%;padding:12px;border:1px solid #d5ded3;border-radius:10px;font-size:16px;background:#fff;color:var(--ink)}.action{width:100%;border:0;border-radius:12px;padding:14px;margin-top:11px;font-size:15px;font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,#176d3d,#228c50);color:#fff}.secondary{background:#edf1eb;color:#294534;border:1px solid #dce5da}.danger{background:#fff0ef;color:#a32626;border:1px solid #ffd2ce}.small{font-size:12px;color:var(--muted);line-height:1.6}.status{padding:10px;border-radius:10px;margin:9px 0;font-size:13px}.err{background:#fff0ef;color:#9c2727}.ok{background:#eaf7ec;color:#176d3d}
+#adminLink{display:inline-block;color:var(--forest);margin:6px;text-decoration:underline;cursor:pointer}footer{text-align:center;color:#7a867c;font-size:12px;padding:18px}
+.admin-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.admin-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.admin-tabs button{border:1px solid var(--line);border-radius:9px;padding:9px 12px;background:#f3f6f1;font-weight:bold}.admin-tabs button.active{background:var(--forest);color:white}.order{border:1px solid var(--line);border-radius:13px;padding:12px;margin:10px 0;background:#fff}.order-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.pill{font-size:12px;border-radius:20px;background:#edf5ee;padding:4px 8px;color:var(--forest)}.admin-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hidden{display:none!important}
+@media(max-width:450px){main{padding-left:10px;padding-right:10px}.food-icon{width:65px;height:65px}.item{gap:8px;padding:8px}.name{font-size:14px}.qty{gap:3px}.grid,.admin-form{grid-template-columns:1fr}.full{grid-column:auto}.steps{gap:3px}.step{font-size:11px}}
+</style>
+</head>
+<body>
+<header><div><div class="brand-mark">🍱</div><div class="eyebrow">ঘরোয়া খাবার • প্রতিদিনের যত্ন</div><h1>জ্যোতি হোম ডেলিভারি</h1><p>ঘরের স্বাদ, আপনার দরজায় — কাটোয়া</p></div></header>
+<main>
+<div id="notice" class="status hidden"></div>
+<section id="shop" class="hidden">
+ <div class="steps"><div id="s1" class="step active">1 · খাবার</div><div id="s2" class="step">2 · বিল</div><div id="s3" class="step">3 · ঠিকানা</div></div>
+ <section id="page-menu" class="page active"><div id="storeClosedNotice" class="status err hidden">দোকান এখন বন্ধ। আপাতত নতুন অর্ডার নেওয়া হচ্ছে না।</div><h2>🍽️ খাবারের তালিকা</h2><p class="sub">সবজি ভাত বাধ্যতামূলক; অন্য খাবার ইচ্ছেমতো যোগ করুন।</p><div id="items" class="items"><p>মেনু লোড হচ্ছে…</p></div><button class="action primary" onclick="showBill()">নেক্সট: বিল দেখুন →</button></section>
+ <section id="page-bill" class="page"><h2>আপনার অর্ডারের বিল</h2><p class="sub">অর্ডার নিশ্চিত করার আগে খাবার ও মোট দাম দেখে নিন।</p><div class="card" id="billItems"></div><div class="card"><div class="total"><span>খাবারের দাম</span><b id="billFood">₹55</b></div><div class="total"><span>ডেলিভারি ফি</span><b>₹0</b></div><div class="total"><span>প্যাকেজিং চার্জ</span><b>₹0</b></div><div class="total grand"><span>সর্বমোট</span><strong id="billTotal">₹55</strong></div></div><button class="action primary" onclick="showPage('page-address',3)">নেক্সট: ঠিকানা →</button><button class="action secondary" onclick="showPage('page-menu',1)">← মেনুতে ফিরে যান</button></section>
+ <section id="page-address" class="page"><h2>ডেলিভারির ঠিকানা</h2><form id="orderForm" class="card" onsubmit="submitOrder(event)"><div class="grid">
+ <div class="field full"><label for="custName">পুরো নাম *</label><input id="custName" required placeholder="আপনার নাম" maxlength="100"></div>
+ <div class="field full"><label for="custPhone">ফোন নম্বর *</label><input id="custPhone" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required placeholder="১০ সংখ্যার ফোন নম্বর"></div>
+ <div class="field full"><label for="house">হাউস / ফ্ল্যাট / বিল্ডিংয়ের নাম *</label><input id="house" required maxlength="150" placeholder="বাড়ি, ফ্ল্যাট বা বিল্ডিংয়ের নাম"></div>
+ <div class="field full"><label for="area">পাড়ার নাম *</label><input id="area" required maxlength="100" placeholder="পাড়ার নাম"></div>
+ <div class="field full"><label for="landmark">ল্যান্ডমার্ক *</label><input id="landmark" required maxlength="150" placeholder="কাছের পরিচিত জায়গা"></div>
+ <div class="field"><label>শহর</label><input value="কাটোয়া" readonly></div><div class="field"><label>পিনকোড</label><input value="713130" readonly></div>
+ </div><button id="placeOrderBtn" class="action primary" type="submit">ওয়েবসাইটে অর্ডার জমা দিন</button></form><button class="action secondary" onclick="showPage('page-bill',2)">← বিলে ফিরে যান</button></section>
+</section>
+<section id="orderSuccess" class="card hidden">
+ <h2 style="margin-top:0">🎉 Order Has Been Placed!</h2>
+ <p id="successGreeting">ধন্যবাদ! আপনার অর্ডার সফলভাবে জমা হয়েছে।</p>
+ <p>আপনার অর্ডার নম্বর:</p><p><b id="successOrderId"></b></p>
+ <button class="action secondary" type="button" onclick="backToShop()">দোকানে ফিরুন</button>
+</section>
+
+
+<section id="admin">
+ <div class="card">
+  <div class="admin-head"><div><h2 style="margin-top:0">🔐 অ্যাডমিন প্যানেল</h2><p class="sub">শুধু অনুমোদিত অ্যাডমিন অ্যাকাউন্ট দিয়ে প্রবেশ করুন।</p></div><button class="action secondary" style="width:auto;margin:0" onclick="backToShop()">দোকানে ফিরুন</button></div>
+  <div id="adminLogin"><div class="field"><label for="adminEmail">অ্যাডমিন ইমেইল</label><input id="adminEmail" type="email" autocomplete="username" placeholder="আপনার অ্যাডমিন ইমেইল"></div><div class="field" style="margin-top:10px"><label for="adminPassword">পাসওয়ার্ড</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="পাসওয়ার্ড"></div><button class="action primary" onclick="adminLogin()">অ্যাডমিন লগইন</button><p class="small">প্রথমে Firebase Console → Authentication থেকে আপনার অ্যাডমিন ইমেইল/পাসওয়ার্ড অ্যাকাউন্ট তৈরি করুন।</p></div>
+  <div id="adminArea" class="hidden"><div class="admin-head"><span id="adminWho" class="small"></span><button class="action secondary" style="width:auto;margin:0" onclick="adminLogout()">লগআউট</button></div>
+   <div class="card"><h2 style="margin-top:0">🏪 দোকান চালু / বন্ধ</h2><p class="small">দোকান বন্ধ করলে কাস্টমার মেনু দেখতে পারবেন, কিন্তু নতুন অর্ডার জমা দিতে পারবেন না।</p><p id="storeStatusText" class="status ok">দোকানের অবস্থা লোড হচ্ছে…</p><button id="storeToggleBtn" class="action primary" type="button" onclick="toggleStoreStatus()">দোকানের অবস্থা পরিবর্তন</button></div>
+   <div class="card"><h2 style="margin-top:0">🎉 অর্ডার সফলতার গ্রিটিং মেসেজ</h2><p class="small">অর্ডার জমা হওয়ার পর কাস্টমার এই বার্তাটি দেখবেন।</p><div class="field"><label for="greetingText">গ্রিটিং মেসেজ</label><textarea id="greetingText" rows="3" maxlength="1000" placeholder="আপনার অর্ডারের জন্য ধন্যবাদ!"></textarea></div><button class="action primary" type="button" onclick="saveGreeting()">গ্রিটিং সংরক্ষণ করুন</button><p id="greetingStatus" class="small" aria-live="polite"></p></div>
+    <div class="admin-tabs"><button id="tabOrders" class="active" onclick="adminTab('orders')">অর্ডার</button><button id="tabProducts" onclick="adminTab('products')">মেনু ও স্টক</button></div>
+   <div id="adminOrders"><div class="admin-head"><h2 style="margin:5px 0">নতুন ও পুরোনো অর্ডার</h2><button class="action secondary" style="width:auto;margin:0" onclick="loadOrders()">রিফ্রেশ</button></div><div id="ordersList">অর্ডার লোড হচ্ছে…</div></div>
+   <div id="adminProducts" class="hidden"><h2 style="margin-top:6px">খাবার যোগ / সম্পাদনা</h2><form id="productForm" onsubmit="saveProduct(event)"><input id="editProductId" type="hidden"><div class="admin-form"><div class="field"><label>খাবারের নাম</label><input id="prodName" required maxlength="100"></div><div class="field"><label>দাম (₹)</label><input id="prodPrice" type="number" min="0" max="100000" step="1" required></div><div class="field"><label>স্টক সংখ্যা</label><input id="prodStock" type="number" min="0" max="100000" step="1" value="100" required></div><div class="field"><label>ছবির URL (ঐচ্ছিক)</label><input id="prodImage" type="url" placeholder="https://..."></div></div><label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="prodRequired" type="checkbox" style="width:auto"> বাধ্যতামূলক খাবার (যেমন সবজি ভাত)</label><button class="action primary" type="submit">খাবার সংরক্ষণ করুন</button><button class="action secondary" type="button" onclick="resetProductForm()">নতুন খাবার / ফর্ম পরিষ্কার</button></form><h2>বর্তমান মেনু</h2><div id="productsList">মেনু লোড হচ্ছে…</div></div>
+  </div>
+ </div>
+</section>
+</main><footer><b>🍱 জ্যোতি হোম ডেলিভারি</b><br>ঘরোয়া স্বাদের খাবার • কাটোয়া 713130<br><a id="adminLink" href="index.html">কাস্টমার পেজ</a></footer>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getFirestore,collection,doc,getDocs,getDoc,addDoc,setDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+// Firebase web config from the project supplied by the owner.
+// Web API keys are identifiers, not admin passwords. Firestore Rules must be configured as described in the README.
+const firebaseConfig={
+ apiKey:"AIzaSyCUyOK-932pbkuSaJ8WWDnmgulE_Qbsk5g",
+ authDomain:"jyotifoodonline.firebaseapp.com",
+ projectId:"jyotifoodonline",
+ storageBucket:"jyotifoodonline.firebasestorage.app",
+ messagingSenderId:"792946884134",
+ appId:"1:792946884134:web:84efc807650bc3a467b0e7",
+ measurementId:"G-2Z8GNW4VR0"
+};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const initialProducts=[
+ {name:"সবজি ভাত",price:55,stock:100,required:true,image:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:1},
+ {name:"এক্সট্রা ভাত",price:7,stock:100,required:false,image:"https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:2},
+ {name:"ডিমের ওমলেট",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:3},
+ {name:"ডিমের কারি",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:4},
+ {name:"মাছ",price:32,stock:100,required:false,image:"https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:5},
+ {name:"চিকেন 2 পিস",price:40,stock:100,required:false,image:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:6},
+ {name:"জলের বোতল",price:10,stock:100,required:false,image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:7},
+ {name:"টক দই 50 গ্রাম",price:12,stock:100,required:false,image:"https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:8},
+ {name:"পোস্তর বড়া",price:25,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:9}
+];
+let products=[],quantities={},isAdmin=false,storeIsOpen=true;
+const $=id=>document.getElementById(id);
+function notify(msg,type="ok"){const n=$("notice");n.textContent=msg;n.className="status "+(type==="err"?"err":"ok");n.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>n.classList.add("hidden"),7000)}
+function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function money(n){return "₹"+Number(n||0)}
+const DEFAULT_GREETING="ধন্যবাদ! আপনার অর্ডার সফলভাবে জমা হয়েছে।";
+async function loadGreeting(){
+ try{
+   const snap=await getDoc(doc(db,"settings","orderGreeting"));
+   const settings=snap.exists()?snap.data():{};
+   const msg=(typeof settings.message==="string" && settings.message.trim())?settings.message:DEFAULT_GREETING;
+   storeIsOpen=settings.storeIsOpen!==false;
+   updateStoreStatusUI();
+   $("successGreeting").textContent=msg;
+   if($("greetingText")) $("greetingText").value=msg;
+ }catch(e){
+   console.error("loadGreeting:",e);
+   $("successGreeting").textContent=DEFAULT_GREETING;
+   if($("greetingText")) $("greetingText").value=DEFAULT_GREETING;
+   updateStoreStatusUI();
+   if($("greetingStatus")) $("greetingStatus").textContent="আগের মেসেজ পড়া যায়নি: "+(e.code||e.message||"অজানা সমস্যা");
+ }
+}
+function updateStoreStatusUI(){
+ const t=$("storeStatusText"),b=$("storeToggleBtn");
+ if(t){t.textContent=storeIsOpen?"দোকান এখন চালু — কাস্টমার অর্ডার করতে পারবেন।":"দোকান এখন বন্ধ — নতুন অর্ডার বন্ধ আছে।";t.className="status "+(storeIsOpen?"ok":"err");}
+ if(b)b.textContent=storeIsOpen?"দোকান বন্ধ করুন":"দোকান চালু করুন";
+ const n=$("storeClosedNotice");
+ if(n)n.classList.toggle("hidden",storeIsOpen);
+ const orderBtn=$("placeOrderBtn");
+ if(orderBtn){orderBtn.disabled=!storeIsOpen;orderBtn.textContent=storeIsOpen?"ওয়েবসাইটে অর্ডার জমা দিন":"দোকান বন্ধ — অর্ডার নেওয়া হচ্ছে না";}
+ const nextButtons=document.querySelectorAll('button[onclick="showBill()"],button[onclick="showPage(\'page-address\',3)"]');
+ nextButtons.forEach(x=>x.disabled=!storeIsOpen);
+}
+window.toggleStoreStatus=async()=>{
+ if(!auth.currentUser)return notify("প্রথমে অ্যাডমিন লগইন করুন।","err");
+ const next=!storeIsOpen;
+ const b=$("storeToggleBtn");if(b)b.disabled=true;
+ try{
+  await setDoc(doc(db,"settings","orderGreeting"),{storeIsOpen:next,storeUpdatedAt:serverTimestamp()},{merge:true});
+  storeIsOpen=next;updateStoreStatusUI();notify(next?"দোকান চালু করা হয়েছে।":"দোকান বন্ধ করা হয়েছে।");
+ }catch(e){console.error(e);notify("দোকানের অবস্থা বদলানো যায়নি: "+(e.code||e.message),"err")}
+ finally{if(b)b.disabled=false}
+};
+window.saveGreeting=async()=>{
+ if(!auth.currentUser)return notify("প্রথমে অ্যাডমিন লগইন করুন।","err");
+ const message=$("greetingText").value.trim();
+ if(!message)return notify("গ্রিটিং মেসেজ লিখুন।","err");
+ const btn=document.querySelector('button[onclick="saveGreeting()"]');
+ if(btn){btn.disabled=true;btn.textContent="সংরক্ষণ হচ্ছে…";}
+ try{
+   await setDoc(doc(db,"settings","orderGreeting"),{message,updatedAt:serverTimestamp()},{merge:true});
+   $("successGreeting").textContent=message;
+   if($("greetingStatus")) $("greetingStatus").textContent="সর্বশেষ সংরক্ষণ সফল হয়েছে।";
+   notify("গ্রিটিং মেসেজ সংরক্ষণ হয়েছে।");
+ }catch(e){
+   console.error("saveGreeting:",e);
+   const detail=e.code||e.message||"অজানা সমস্যা";
+   if($("greetingStatus")) $("greetingStatus").textContent="সংরক্ষণ হয়নি: "+detail;
+   notify("গ্রিটিং সংরক্ষণ হয়নি: "+detail,"err");
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent="গ্রিটিং সংরক্ষণ করুন";}
+ }
+}
+function formatOrderDate(o){
+ const raw=o.createdAt;
+ let d=null;
+ try{
+   if(raw && typeof raw.toDate==="function") d=raw.toDate();
+   else if(raw && typeof raw.seconds==="number") d=new Date(raw.seconds*1000);
+   else if(typeof raw==="string" || typeof raw==="number") d=new Date(raw);
+   if((!d || Number.isNaN(d.getTime())) && o.createdAtClient) d=new Date(o.createdAtClient);
+ }catch(e){ if(o.createdAtClient) d=new Date(o.createdAtClient); }
+ if(!d || Number.isNaN(d.getTime())) return "তারিখ/সময় নেই (পুরোনো অর্ডার)";
+ return new Intl.DateTimeFormat("bn-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true,timeZone:"Asia/Kolkata"}).format(d);
+}
+async function loadProducts(){
+ const menuBox=$("items");
+ menuBox.innerHTML='<div class="card">🍽️ মেনু লোড হচ্ছে…</div>';
+ products=[];
+ try{
+   let snap;
+   try{
+     // Preferred query: products ordered by the configured sort field.
+     snap=await getDocs(query(collection(db,"products"),orderBy("sort")));
+   }catch(firstError){
+     console.warn("Sorted product query failed; trying a basic query.",firstError);
+     // Fallback: this can still work if the sort field/query is the issue.
+     snap=await getDocs(collection(db,"products"));
+   }
+   products=snap.docs.map(d=>({id:d.id,...d.data()}));
+   if(!products.length){
+     menuBox.innerHTML='<div class="card">মেনুতে এখনও খাবার যোগ করা হয়নি। অ্যাডমিন প্যানেলে লগইন করে “মেনু ও স্টক” অংশ থেকে ডিফল্ট মেনু তৈরি করুন।</div>';
+     return;
+   }
+   products=products.filter(p=>p.active!==false);
+   products.sort((a,b)=>(Number(a.sort)||0)-(Number(b.sort)||0));
+   products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
+   renderMenu();
+ }catch(e){
+   console.error("Menu loading error:",e);
+   let msg="মেনু লোড হয়নি। ইন্টারনেট সংযোগ এবং Firebase Firestore Rules পরীক্ষা করুন।";
+   if(e?.code==="permission-denied")msg="Firebase অনুমতি দেয়নি (permission-denied)। Firestore Rules-এ products পড়ার অনুমতি পরীক্ষা করুন।";
+   else if(e?.code==="unavailable")msg="Firebase সার্ভার এখন পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।";
+   else if(e?.code==="unauthenticated")msg="Firebase সংযোগ যাচাই করা যায়নি। পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।";
+   menuBox.innerHTML='<div class="card"><b>⚠️ মেনু লোড করা যায়নি</b><p>'+escapeHtml(msg)+'</p><button class="action primary" type="button" onclick="loadProducts()">আবার চেষ্টা করুন</button></div>';
+   notify(msg,"err");
+ }
+}
+function renderMenu(){
+ const active=products.filter(p=>p.active!==false);
+ $("items").innerHTML=active.map(p=>`<div class="item"><img class="food-icon" src="${escapeHtml(p.image||"")}" alt="" onerror="this.style.visibility='hidden'"><div class="info"><div class="name">${escapeHtml(p.name)}</div><div class="price">${money(p.price)}</div><div class="stock">${p.outOfStock||p.stock<=0?"আজ স্টক শেষ":(p.stock<20?"স্টক: "+p.stock:"")}</div>${p.required?'<span class="pill">বাধ্যতামূলক</span>':""}</div><div class="qty"><button type="button" aria-label="কম" onclick="changeQty('${p.id}',-1)" ${p.required&&quantities[p.id]<=1?"disabled":""}>−</button><span>${quantities[p.id]||0}</span><button type="button" aria-label="বাড়ান" onclick="changeQty('${p.id}',1)" ${(p.outOfStock||p.stock<=0||(quantities[p.id]||0)>=p.stock||!storeIsOpen)?"disabled":""}>+</button></div></div>`).join("");
+}
+window.changeQty=(id,delta)=>{const p=products.find(x=>x.id===id);if(!p)return;if(!storeIsOpen){notify("দোকান এখন বন্ধ।","err");return}if(p.outOfStock&&delta>0){notify("এই আইটেমটি আউট অফ স্টক।","err");return}let min=p.required?1:0;quantities[id]=Math.max(min,Math.min(Number(p.stock||0),Number(quantities[id]||0)+delta));renderMenu()};
+window.showPage=(id,n)=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");[1,2,3].forEach(i=>$("s"+i).classList.toggle("active",i===n));window.scrollTo({top:0,behavior:"smooth"})};
+window.showBill=()=>{const chosen=products.filter(p=>(quantities[p.id]||0)>0);if(!chosen.some(p=>p.required)){notify("সবজি ভাত অন্তত ১টি নিতে হবে।","err");return}const total=chosen.reduce((s,p)=>s+p.price*quantities[p.id],0);$("billItems").innerHTML=chosen.map(p=>`<div class="total"><span>${escapeHtml(p.name)} × ${quantities[p.id]}</span><b>${money(p.price*quantities[p.id])}</b></div>`).join("");$("billFood").textContent=money(total);$("billTotal").textContent=money(total);showPage("page-bill",2)};
+window.submitOrder=async ev=>{
+ ev.preventDefault();const btn=$("placeOrderBtn");if(!storeIsOpen){notify("দোকান এখন বন্ধ। নতুন অর্ডার নেওয়া হচ্ছে না।","err");return}if(!ev.target.reportValidity())return;
+ const chosen=products.filter(p=>(quantities[p.id]||0)>0);
+ if(!chosen.length){notify("আগে খাবার বেছে নিন।","err");return}
+ const required=chosen.some(p=>p.required);if(!required){notify("সবজি ভাত বাধ্যতামূলক।","err");return}
+ for(const p of chosen){if(p.outOfStock){notify(p.name+" এখন আউট অফ স্টক।","err");return}if(Number(quantities[p.id])>Number(p.stock)){notify(p.name+"-এর স্টক পর্যাপ্ত নেই।","err");return}}
+ const customer={name:$("custName").value.trim(),phone:$("custPhone").value.trim(),house:$("house").value.trim(),area:$("area").value.trim(),landmark:$("landmark").value.trim(),city:"কাটোয়া",pin:"713130"};
+ const lines=chosen.map(p=>({productId:p.id,name:p.name,price:Number(p.price),qty:Number(quantities[p.id]),subtotal:Number(p.price)*Number(quantities[p.id])}));
+ const total=lines.reduce((s,x)=>s+x.subtotal,0);btn.disabled=true;btn.textContent="অর্ডার জমা হচ্ছে…";
+ try{
+   const orderRef=await addDoc(collection(db,"orders"),{customer,items:lines,total,deliveryFee:0,packagingFee:0,status:"নতুন অর্ডার",createdAt:serverTimestamp(),createdAtClient:new Date().toISOString()});
+   $("orderForm").reset();
+   $("successOrderId").textContent=orderRef.id;
+   $("shop").classList.add("hidden");
+   $("admin").classList.add("hidden");
+   $("orderSuccess").classList.remove("hidden");
+   await loadGreeting();
+   window.scrollTo({top:0,behavior:"smooth"});
+   notify("অর্ডার সফলভাবে জমা হয়েছে!");
+ }catch(e){console.error(e);notify("অর্ডার জমা হয়নি। ইন্টারনেট, Firebase ও Firestore Rules পরীক্ষা করুন।","err")}
+ finally{btn.disabled=false;btn.textContent="ওয়েবসাইটে অর্ডার জমা দিন"}
+};
+window.openAdmin=()=>{$("shop").classList.add("hidden");$("admin").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})};
+window.backToShop=()=>{window.location.href="index.html"};
+window.adminLogin=async()=>{
+ const email=$("adminEmail").value.trim(),password=$("adminPassword").value;
+ if(!email||!password){notify("অ্যাডমিন ইমেইল ও পাসওয়ার্ড লিখুন।","err");return}
+ try{
+  await signInWithEmailAndPassword(auth,email,password);
+  notify("লগইন সফল।","ok");
+ }catch(e){
+  console.error("Admin login error:",e);
+  const code=e?.code||"unknown";
+  const messages={
+   "auth/invalid-credential":"ইমেইল বা পাসওয়ার্ড ভুল। Firebase Authentication-এ অ্যাকাউন্টটি আছে কি না পরীক্ষা করুন।",
+   "auth/user-not-found":"এই ইমেইলে অ্যাডমিন অ্যাকাউন্ট পাওয়া যায়নি।",
+   "auth/wrong-password":"পাসওয়ার্ড ভুল।",
+   "auth/invalid-email":"ইমেইল ঠিকানাটি সঠিক নয়।",
+   "auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+   "auth/network-request-failed":"ইন্টারনেট বা Firebase সংযোগে সমস্যা।",
+   "auth/operation-not-allowed":"Firebase Console → Authentication → Sign-in method-এ Email/Password চালু করুন।",
+   "auth/unauthorized-domain":"Firebase Authentication-এর Authorized domains-এ ওয়েবসাইটের ডোমেইন যোগ করুন।"
+  };
+  notify((messages[code]||("অ্যাডমিন লগইন ব্যর্থ ("+code+")। Firebase Console-এর Authentication এবং Authorized domains পরীক্ষা করুন।")),"err");
+ }
+};
+window.adminLogout=async()=>{await signOut(auth);notify("অ্যাডমিন লগআউট হয়েছে।")};
+onAuthStateChanged(auth,async user=>{
+ isAdmin=!!user;
+ $("adminLogin").classList.toggle("hidden",!!user);$("adminArea").classList.toggle("hidden",!user);
+ if(user){$("adminWho").textContent="লগইন: "+user.email;await loadOrders();await loadAdminProducts();await loadGreeting()}
+});
+window.adminTab=tab=>{$("adminOrders").classList.toggle("hidden",tab!=="orders");$("adminProducts").classList.toggle("hidden",tab!=="products");$("tabOrders").classList.toggle("active",tab==="orders");$("tabProducts").classList.toggle("active",tab==="products")};
+window.loadOrders=async()=>{
+ if(!auth.currentUser)return;
+ $("ordersList").textContent="অর্ডার লোড হচ্ছে…";
+ try{
+   let docs=[];
+   try{
+     const snap=await getDocs(query(collection(db,"orders"),orderBy("createdAt","desc")));
+     docs=snap.docs;
+   }catch(sortError){
+     console.warn("Order date sort fallback:",sortError);
+     const snap=await getDocs(collection(db,"orders"));
+     docs=snap.docs;
+   }
+   if(!docs.length){$("ordersList").innerHTML="<p>এখনও কোনো অর্ডার আসেনি।</p>";return}
+   docs.sort((a,b)=>{
+     const getMs=o=>{const x=o.createdAt;if(x&&typeof x.toMillis==="function")return x.toMillis();if(x&&typeof x.seconds==="number")return x.seconds*1000;const v=o.createdAtClient?Date.parse(o.createdAtClient):0;return Number.isFinite(v)?v:0};
+     return getMs(b.data())-getMs(a.data());
+   });
+   $("ordersList").innerHTML=docs.map(d=>{
+     const o=d.data(),c=o.customer||{},items=o.items||[];
+     return `<div class="order"><div class="order-top"><b>অর্ডার #${escapeHtml(d.id.slice(-8))}</b><span class="pill">${escapeHtml(o.status||"নতুন অর্ডার")}</span></div><p><b>📅 অর্ডারের তারিখ ও সময়:</b> ${escapeHtml(formatOrderDate(o))}</p><p><b>${escapeHtml(c.name||"")}</b> · ${escapeHtml(c.phone||"")}<br>${escapeHtml(c.house||"")}, ${escapeHtml(c.area||"")}, ${escapeHtml(c.landmark||"")}, ${escapeHtml(c.city||"কাটোয়া")} ${escapeHtml(c.pin||"713130")}</p><div>${items.map(i=>`${escapeHtml(i.name)} × ${i.qty} = ${money(i.subtotal)}`).join("<br>")}</div><p><b>মোট: ${money(o.total)}</b></p><div class="grid"><div class="field"><label>অর্ডারের অবস্থা</label><select id="status-${d.id}">${["নতুন অর্ডার","গ্রহণ করা হয়েছে","রান্না হচ্ছে","ডেলিভারির জন্য বেরিয়েছে","সম্পন্ন","বাতিল"].map(st=>`<option ${o.status===st?"selected":""}>${st}</option>`).join("")}</select></div><div class="field"><label>&nbsp;</label><button class="action primary" style="margin:0" onclick="updateOrderStatus('${d.id}')">অবস্থা সংরক্ষণ</button></div></div><p class="small">অর্ডার ID: ${escapeHtml(d.id)}</p></div>`;
+   }).join("");
+ }catch(e){
+   console.error("loadOrders:",e);
+   $("ordersList").innerHTML='<p class="status err">অর্ডার পড়া যাচ্ছে না: '+escapeHtml(e.code||e.message||"Firestore Rules পরীক্ষা করুন।")+'</p>';
+ }
+};
+window.updateOrderStatus=async id=>{if(!auth.currentUser)return;try{await updateDoc(doc(db,"orders",id),{status:$("status-"+id).value,updatedAt:serverTimestamp()});notify("অর্ডারের অবস্থা আপডেট হয়েছে।");await loadOrders()}catch(e){notify("আপডেট হয়নি। Firestore Rules পরীক্ষা করুন।","err")}};
+window.loadAdminProducts=async()=>{if(!auth.currentUser)return;try{const snap=await getDocs(query(collection(db,"products"),orderBy("sort")));const list=snap.docs.map(d=>({id:d.id,...d.data()}));$("productsList").innerHTML=list.length?list.map(p=>`<div class="order"><div class="order-top"><b>${escapeHtml(p.name)}</b><span>${money(p.price)} · স্টক ${p.stock}</span></div><p class="small">${p.active===false?"ওয়েবসাইটে লুকানো":"ওয়েবসাইটে দেখানো"} ${p.required?"· বাধ্যতামূলক":""}</p><div class="grid"><button class="action secondary" style="margin:0" onclick="editProduct('${p.id}')">সম্পাদনা</button><button class="action ${p.active===false?"primary":"danger"}" style="margin:0" onclick="toggleProduct('${p.id}',${p.active===false?"true":"false"})">${p.active===false?"আবার দেখান":"লুকান"}</button><button class="action ${p.outOfStock?"primary":"danger"}" style="margin:0" onclick="toggleOutOfStock('${p.id}',${p.outOfStock?"false":"true"})">${p.outOfStock?"স্টকে আছে":"আউট অফ স্টক"}</button></div></div>`).join(""):'<p>মেনু খালি। ডিফল্ট মেনু তৈরি করুন।</p><button class="action primary" onclick="seedMenu()">ডিফল্ট মেনু তৈরি করুন</button>'}catch(e){$("productsList").innerHTML='<p class="status err">মেনু পড়া যাচ্ছে না। Rules পরীক্ষা করুন।</p>'}};
+window.seedMenu=async()=>{if(!auth.currentUser)return;try{const snap=await getDocs(collection(db,"products"));if(!snap.empty){notify("মেনুতে ইতিমধ্যেই খাবার আছে।");return}for(const p of initialProducts)await addDoc(collection(db,"products"),p);notify("ডিফল্ট মেনু তৈরি হয়েছে।");await loadProducts();await loadAdminProducts()}catch(e){notify("মেনু তৈরি হয়নি। Admin UID ও Rules পরীক্ষা করুন।","err")}};
+window.saveProduct=async ev=>{ev.preventDefault();if(!auth.currentUser)return;const id=$("editProductId").value;const payload={name:$("prodName").value.trim(),price:Number($("prodPrice").value),stock:Number($("prodStock").value),image:$("prodImage").value.trim(),required:$("prodRequired").checked,active:true,sort:products.length+1,updatedAt:serverTimestamp()};if(!payload.name||payload.price<0||payload.stock<0)return notify("নাম, দাম ও স্টক সঠিক দিন।","err");try{if(id){const old=products.find(p=>p.id===id);payload.sort=old?.sort||payload.sort;payload.active=old?.active!==false;await updateDoc(doc(db,"products",id),payload)}else await addDoc(collection(db,"products"),payload);resetProductForm();notify("খাবার সংরক্ষণ হয়েছে।");await loadProducts();await loadAdminProducts()}catch(e){notify("সংরক্ষণ হয়নি। Firestore Rules পরীক্ষা করুন।","err")}};
+window.editProduct=async id=>{const p=products.find(x=>x.id===id);if(!p)return;$("editProductId").value=id;$("prodName").value=p.name;$("prodPrice").value=p.price;$("prodStock").value=p.stock;$("prodImage").value=p.image||"";$("prodRequired").checked=!!p.required;window.scrollTo({top:$("productForm").getBoundingClientRect().top+window.scrollY-20,behavior:"smooth"})};
+window.toggleProduct=async(id,active)=>{try{await updateDoc(doc(db,"products",id),{active,updatedAt:serverTimestamp()});notify("মেনু আপডেট হয়েছে।");await loadProducts();await loadAdminProducts()}catch(e){notify("পরিবর্তন করা যায়নি।","err")}};
+window.toggleOutOfStock=async(id,outOfStock)=>{
+ if(!auth.currentUser)return notify("প্রথমে অ্যাডমিন লগইন করুন।","err");
+ try{await updateDoc(doc(db,"products",id),{outOfStock,updatedAt:serverTimestamp()});if(outOfStock)quantities[id]=0;notify(outOfStock?"আইটেম আউট অফ স্টক করা হয়েছে।":"আইটেম আবার স্টকে আছে।");await loadProducts();await loadAdminProducts()}
+ catch(e){console.error(e);notify("স্টক অবস্থা বদলানো যায়নি: "+(e.code||e.message),"err")}
+};
+window.resetProductForm=()=>{$("productForm").reset();$("editProductId").value="";$("prodStock").value=100};
+window.addEventListener("load",()=>{loadProducts();loadGreeting()});
+</script>
+</body></html>
