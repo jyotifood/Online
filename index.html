@@ -32,20 +32,14 @@ footer{text-align:center;color:#7a867c;font-size:12px;padding:18px}
 .admin-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.admin-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.admin-tabs button{border:1px solid var(--line);border-radius:9px;padding:9px 12px;background:#f3f6f1;font-weight:bold}.admin-tabs button.active{background:var(--forest);color:white}.order{border:1px solid var(--line);border-radius:13px;padding:12px;margin:10px 0;background:#fff}.order-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.pill{font-size:12px;border-radius:20px;background:#edf5ee;padding:4px 8px;color:var(--forest)}.admin-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hidden{display:none!important}
 @media(max-width:450px){main{padding-left:10px;padding-right:10px}.food-icon{width:65px;height:65px}.item{gap:8px;padding:8px}.name{font-size:14px}.qty{gap:3px}.grid,.admin-form{grid-template-columns:1fr}.full{grid-column:auto}.steps{gap:3px}.step{font-size:11px}}
 
-/* Clear, labeled floating share button */
-#shareBtn, .share-btn, .floating-share {
-  min-width: 132px !important;
-  min-height: 48px !important;
-  padding: 12px 16px !important;
-  border-radius: 28px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  font-weight: 700 !important;
-  box-shadow: 0 5px 18px rgba(0,0,0,.22) !important;
-  z-index: 9999 !important;
-}
+/* Always-floating icon-only share button */
+#shareFab.floating-share { position:fixed !important; right:16px !important; bottom:18px !important; left:auto !important; top:auto !important; width:56px !important; height:56px !important; min-width:56px !important; min-height:56px !important; padding:0 !important; border-radius:50% !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:99999 !important; background:#16834a !important; color:#fff !important; box-shadow:0 7px 20px #123d2b55 !important; }
+#shareFab svg { width:25px !important; height:25px !important; flex:none !important; }
+.top-nav { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:14px 0; }
+.top-nav button { border:1px solid var(--line); border-radius:12px; padding:11px 5px; background:#fff; color:var(--forest); font-weight:800; font-size:13px; }
+.top-nav button.active { background:var(--forest); color:#fff; }
+#cancellation-policy { margin-top:16px; }
+@media(max-width:380px){.top-nav button{font-size:12px;padding:10px 2px}}
 
 
 /* Jyoti Home Delivery: gentle, lightweight animations */
@@ -99,18 +93,19 @@ button:active, .btn:active, .action:active {
 <body>
 <header><div><div class="brand-mark">🍱</div><div class="eyebrow">ঘরোয়া খাবার • প্রতিদিনের যত্ন</div><h1>জ্যোতি হোম ডেলিভারি</h1><p>ঘরের স্বাদ, আপনার দরজায় — কাটোয়া</p></div></header>
 <main>
+<nav class="top-nav" aria-label="প্রধান মেনু"><button id="tabHome" class="active" type="button" onclick="showTopTab('home')">🏠 Home</button><button id="tabAbout" type="button" onclick="showTopTab('about')">ℹ️ About Us</button><button id="tabPolicy" type="button" onclick="showTopTab('policy')">📝 Cancellation Policy</button></nav>
 <div id="notice" class="status hidden"></div>
 <section id="shop">
  <div class="steps" style="grid-template-columns:repeat(4,1fr)"><div id="s1" class="step active">1 · মেনু</div><div id="s2" class="step">2 · বিল</div><div id="s3" class="step">3 · স্লট</div><div id="s4" class="step">4 · ঠিকানা</div></div>
  <section id="page-menu" class="page active"><div id="storeClosedNotice" class="status err hidden">দোকান এখন বন্ধ। আপাতত নতুন অর্ডার নেওয়া হচ্ছে না।</div><h2>🍽️ খাবারের তালিকা</h2><p class="sub">সবজি ভাত বাধ্যতামূলক; অন্য খাবার ইচ্ছেমতো যোগ করুন।</p><div class="note">💵 <b>Pay on Delivery</b> — খাবার হাতে পেয়ে পেমেন্ট করুন। <b>No Extra Cost</b> — ডেলিভারি ফি ₹0, প্যাকেজিং চার্জ ₹0।</div><div id="items" class="items"><p>মেনু লোড হচ্ছে…</p></div><button class="action primary" onclick="showBill()">নেক্সট: বিল দেখুন →</button></section>
- <section id="page-bill" class="page"><h2>আপনার অর্ডারের বিল</h2><p class="sub">অর্ডার নিশ্চিত করার আগে খাবার ও মোট দাম দেখে নিন।</p><div class="card" id="billItems"></div><div class="card"><div class="total"><span>খাবারের দাম</span><b id="billFood">₹55</b></div><div class="total"><span>ডেলিভারি ফি</span><b>₹0</b></div><div class="total"><span>প্যাকেজিং চার্জ</span><b>₹0</b></div><div class="total grand"><span>সর্বমোট</span><strong id="billTotal">₹55</strong></div></div><button class="action primary" onclick="showPage('page-slot',3)">নেক্সট: ডেলিভারি স্লট →</button><button class="action secondary" onclick="showPage('page-menu',1)">← মেনুতে ফিরে যান</button></section>
+ <section id="page-bill" class="page"><h2>আপনার অর্ডারের বিল</h2><p class="sub">অর্ডার নিশ্চিত করার আগে খাবার ও মোট দাম দেখে নিন।</p><div class="card" id="billItems"></div><div class="card"><div class="total"><span>খাবারের দাম</span><b id="billFood">₹55</b></div><div class="total"><span>ডেলিভারি ফি</span><b>₹0</b></div><div class="total"><span>প্যাকেজিং চার্জ</span><b>₹0</b></div><div class="total grand"><span>সর্বমোট</span><strong id="billTotal">₹55</strong></div></div><button class="action primary" onclick="showPage('page-slot',3)">নেক্সট: ডেলিভারি স্লট →</button><button class="action secondary" onclick="showPage('page-menu',1)">← ফিরে যান</button></section>
  <section id="page-slot" class="page"><h2>🕒 ডেলিভারি স্লট বেছে নিন</h2><p class="sub">আপনার সুবিধামতো একটি সময় নির্বাচন করুন।</p><div class="card"><div class="slot-options">
  <label class="slot-option"><input type="radio" name="deliverySlot" value="12 PM - 1 PM" required> 12 PM – 1 PM</label>
  <label class="slot-option"><input type="radio" name="deliverySlot" value="1 PM - 2 PM" required> 1 PM – 2 PM</label>
  <label class="slot-option"><input type="radio" name="deliverySlot" value="2 PM - 3 PM" required> 2 PM – 3 PM</label>
  <label class="slot-option"><input type="radio" name="deliverySlot" value="3 PM - 4 PM" required> 3 PM – 4 PM</label>
  </div><p class="small">নির্বাচিত স্লট অনুযায়ী ডেলিভারির চেষ্টা করা হবে।</p></div>
- <button class="action primary" type="button" onclick="continueToAddress()">নেক্সট: ঠিকানা →</button><button class="action secondary" onclick="showPage('page-slot',3)">← ফিরে যান</button></section>
+ <button class="action primary" type="button" onclick="continueToAddress()">নেক্সট: ঠিকানা →</button><button class="action secondary" onclick="showPage('page-bill',2)">← ফিরে যান</button></section>
  <section id="page-address" class="page"><h2>ডেলিভারির ঠিকানা</h2><form id="orderForm" class="card" onsubmit="submitOrder(event)"><div class="grid">
  <div class="field full"><label for="custName">পুরো নাম *</label><input id="custName" required placeholder="আপনার নাম" maxlength="100"></div>
  <div class="field full"><label for="custPhone">ফোন নম্বর *</label><input id="custPhone" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required placeholder="১০ সংখ্যার ফোন নম্বর"></div>
@@ -118,18 +113,18 @@ button:active, .btn:active, .action:active {
  <div class="field full"><label for="area">পাড়ার নাম *</label><input id="area" required maxlength="100" placeholder="পাড়ার নাম"></div>
  <div class="field full"><label for="landmark">ল্যান্ডমার্ক *</label><input id="landmark" required maxlength="150" placeholder="কাছের পরিচিত জায়গা"></div>
  <div class="field"><label>শহর</label><input value="কাটোয়া" readonly></div><div class="field"><label>পিনকোড</label><input value="713130" readonly></div>
- </div><button id="placeOrderBtn" class="action primary" type="submit">ওয়েবসাইটে অর্ডার জমা দিন</button></form><button class="action secondary" onclick="showPage('page-slot',3)">← ফিরে যান</button></section>
+ </div><button id="placeOrderBtn" class="action primary" type="submit">অর্ডার করুন</button></form><button class="action secondary" onclick="showPage('page-slot',3)">← ফিরে যান</button></section>
 </section>
-<section id="about-us" class="info-card"><h2>❤️ About Us — আমাদের সম্পর্কে</h2>
+<section id="about-us" class="info-card hidden"><h2>❤️ About Us — আমাদের সম্পর্কে</h2>
 <p>জ্যোতি হোম ডেলিভারির লক্ষ্য কাটোয়া শহরের মানুষের জন্য খাবার অর্ডার করা সহজ ও সুবিধাজনক করা। আপনার পছন্দের খাবার, সহজ অর্ডার এবং আন্তরিক পরিষেবা—এই নিয়েই আমাদের ছোট্ট উদ্যোগ।</p>
 <h3 style="color:var(--forest)">কেন জ্যোতি হোম ডেলিভারি থেকে কিনবেন?</h3><div class="info-grid">
 <div class="note">💵 <b>Pay on Delivery</b><br>খাবার হাতে পেয়ে পেমেন্ট করুন।</div><div class="note">✅ <b>No Extra Cost</b><br>ডেলিভারি ও প্যাকেজিং চার্জ ₹0।</div>
 <div class="note">📱 <b>সহজ অনলাইন অর্ডার</b><br>মোবাইল থেকেই অর্ডার দিন।</div><div class="note">🤝 <b>স্থানীয় উদ্যোগ</b><br>কাটোয়া শহরের গ্রাহকদের জন্য।</div></div></section>
-<section id="contact-us" class="info-card"><h2>📞 Contact Us — যোগাযোগ</h2><p>অর্ডার বা পরিষেবা সংক্রান্ত প্রশ্নের জন্য WhatsApp-এ যোগাযোগ করুন।</p>
+<section id="contact-us" class="info-card hidden"><h2>📞 Contact Us — যোগাযোগ</h2><p>অর্ডার বা পরিষেবা সংক্রান্ত প্রশ্নের জন্য WhatsApp-এ যোগাযোগ করুন।</p>
 <a class="action primary" style="display:block;text-align:center;text-decoration:none" href="https://wa.me/917001591627" target="_blank" rel="noopener">WhatsApp: 7001591627</a>
 <h3 style="color:var(--forest)">📍 কাটোয়া শহরের মানচিত্র</h3><iframe class="map-frame" title="কাটোয়া শহরের মানচিত্র" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Katwa,West+Bengal,India&output=embed"></iframe>
 <p><a href="https://www.google.com/maps/search/?api=1&query=Katwa%2C+West%2BBengal%2C%2BIndia" target="_blank" rel="noopener">Google Maps-এ কাটোয়া দেখুন ↗</a></p></section>
-<section id="cancellation-policy" class="info-card"><h2>📝 Cancellation Policy — অর্ডার বাতিলের নীতি</h2>
+<section id="cancellation-policy" class="info-card hidden"><h2>📝 Cancellation Policy — অর্ডার বাতিলের নীতি</h2>
 <p>আমরা একটি ছোট সংস্থা এবং প্রতিটি অর্ডারের জন্য খাবার ও প্রস্তুতির পরিকল্পনা করি। তাই অর্ডার দেওয়ার পর অনুগ্রহ করে অর্ডারটি বাতিল না করার জন্য আমাদের অনুরোধ রইল।</p>
 <p>জরুরি কারণে পরিবর্তন বা বাতিলের প্রয়োজন হলে যত তাড়াতাড়ি সম্ভব WhatsApp-এ যোগাযোগ করুন। খাবার প্রস্তুত হয়ে গেলে অর্ডার বাতিল করা সম্ভব নাও হতে পারে।</p>
 <p class="small">অর্ডার দেওয়ার আগে খাবার, ঠিকানা ও ডেলিভারি স্লট ভালো করে দেখে নিন।</p></section>
@@ -143,7 +138,7 @@ button:active, .btn:active, .action:active {
 </section>
 
 
-</main><footer><b>🍱 জ্যোতি হোম ডেলিভারি</b><br>ঘরোয়া স্বাদের খাবার • কাটোয়া 713130<br><a href="#about-us">About Us</a> · <a href="#contact-us">Contact Us</a> · <a href="#cancellation-policy">Cancellation Policy</a></footer>
+</main><footer><b>🍱 জ্যোতি হোম ডেলিভারি</b><br>ঘরোয়া স্বাদের খাবার • কাটোয়া 713130</footer>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
@@ -202,7 +197,7 @@ function updateStoreStatusUI(){
  const n=$("storeClosedNotice");
  if(n)n.classList.toggle("hidden",storeIsOpen);
  const orderBtn=$("placeOrderBtn");
- if(orderBtn){orderBtn.disabled=!storeIsOpen;orderBtn.textContent=storeIsOpen?"ওয়েবসাইটে অর্ডার জমা দিন":"দোকান বন্ধ — অর্ডার নেওয়া হচ্ছে না";}
+ if(orderBtn){orderBtn.disabled=!storeIsOpen;orderBtn.textContent=storeIsOpen?"অর্ডার করুন":"দোকান বন্ধ — অর্ডার নেওয়া হচ্ছে না";}
  const nextButtons=document.querySelectorAll('button[onclick="showBill()"],button[onclick="showPage(\'page-address\',3)"]');
  nextButtons.forEach(x=>x.disabled=!storeIsOpen);
 }
@@ -286,6 +281,15 @@ function renderMenu(){
  $("items").innerHTML=active.map(p=>`<div class="item"><img class="food-icon" src="${escapeHtml(p.image||"")}" alt="" onerror="this.style.visibility='hidden'"><div class="info"><div class="name">${escapeHtml(p.name)}</div><div class="price">${money(p.price)}</div><div class="stock">${p.outOfStock||p.stock<=0?"আজ স্টক শেষ":(p.stock<20?"স্টক: "+p.stock:"")}</div>${p.required?'<span class="pill">বাধ্যতামূলক</span>':""}</div><div class="qty"><button type="button" aria-label="কম" onclick="changeQty('${p.id}',-1)" ${p.required&&quantities[p.id]<=1?"disabled":""}>−</button><span>${quantities[p.id]||0}</span><button type="button" aria-label="বাড়ান" onclick="changeQty('${p.id}',1)" ${(p.outOfStock||p.stock<=0||(quantities[p.id]||0)>=p.stock||!storeIsOpen)?"disabled":""}>+</button></div></div>`).join("");
 }
 window.changeQty=(id,delta)=>{const p=products.find(x=>x.id===id);if(!p)return;if(!storeIsOpen){notify("দোকান এখন বন্ধ।","err");return}if(p.outOfStock&&delta>0){notify("এই আইটেমটি আউট অফ স্টক।","err");return}let min=p.required?1:0;quantities[id]=Math.max(min,Math.min(Number(p.stock||0),Number(quantities[id]||0)+delta));renderMenu()};
+window.showTopTab=(tab)=>{
+ const shop=$("shop"), success=$("orderSuccess"), about=$("about-us"), contact=$("contact-us"), policy=$("cancellation-policy");
+ ["tabHome","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active"));
+ if(tab==="home") { $("tabHome").classList.add("active"); about.classList.add("hidden"); contact.classList.add("hidden"); policy.classList.add("hidden"); if(success.classList.contains("hidden")) shop.classList.remove("hidden"); else { shop.classList.add("hidden"); success.classList.remove("hidden"); } }
+ else if(tab==="about") { $("tabAbout").classList.add("active"); shop.classList.add("hidden"); success.classList.add("hidden"); policy.classList.add("hidden"); about.classList.remove("hidden"); contact.classList.remove("hidden"); }
+ else { $("tabPolicy").classList.add("active"); shop.classList.add("hidden"); success.classList.add("hidden"); about.classList.add("hidden"); contact.classList.add("hidden"); policy.classList.remove("hidden"); }
+ window.scrollTo({top:0,behavior:"smooth"});
+};
+window.backToShop=()=>{ $("orderSuccess").classList.add("hidden"); $("cancellation-policy").classList.add("hidden"); $("shop").classList.remove("hidden"); $("about-us").classList.add("hidden"); $("contact-us").classList.add("hidden"); ["tabHome","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active")); $("tabHome").classList.add("active"); showPage("page-menu",1); };
 window.showPage=(id,n)=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");[1,2,3,4].forEach(i=>$("s"+i).classList.toggle("active",i===n));window.scrollTo({top:0,behavior:"smooth"})};
 window.continueToAddress=()=>{const selected=document.querySelector('input[name="deliverySlot"]:checked');if(!selected){notify("আগে একটি ডেলিভারি স্লট বেছে নিন।","err");return}showPage("page-address",4)};
 window.toggleShareMenu=()=>{$("shareMenu").classList.toggle("hidden")};
@@ -302,18 +306,21 @@ window.submitOrder=async ev=>{
  const selectedSlot=document.querySelector('input[name="deliverySlot"]:checked');if(!selectedSlot){notify("ডেলিভারি স্লট বেছে নিন।","err");showPage("page-slot",3);return}
  const customer={name:$("custName").value.trim(),phone:$("custPhone").value.trim(),house:$("house").value.trim(),area:$("area").value.trim(),landmark:$("landmark").value.trim(),city:"কাটোয়া",pin:"713130"};
  const lines=chosen.map(p=>({productId:p.id,name:p.name,price:Number(p.price),qty:Number(quantities[p.id]),subtotal:Number(p.price)*Number(quantities[p.id])}));
- const total=lines.reduce((s,x)=>s+x.subtotal,0);btn.disabled=true;btn.textContent="অর্ডার জমা হচ্ছে…";
+ const total=lines.reduce((s,x)=>s+x.subtotal,0);btn.disabled=true;btn.textContent="অর্ডার হচ্ছে…";
  try{
    const orderRef=await addDoc(collection(db,"orders"),{customer,items:lines,total,deliveryFee:0,packagingFee:0,deliverySlot:selectedSlot.value,status:"নতুন অর্ডার",createdAt:serverTimestamp(),createdAtClient:new Date().toISOString()});
    $("orderForm").reset();
    $("successOrderId").textContent=orderRef.id;
    $("shop").classList.add("hidden");
+   $("about-us").classList.add("hidden"); $("contact-us").classList.add("hidden");
    $("orderSuccess").classList.remove("hidden");
+   $("cancellation-policy").classList.remove("hidden");
+   ["tabHome","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active")); $("tabHome").classList.add("active");
    await loadGreeting();
    window.scrollTo({top:0,behavior:"smooth"});
    notify("অর্ডার সফলভাবে জমা হয়েছে!");
  }catch(e){console.error(e);notify("অর্ডার জমা হয়নি। ইন্টারনেট, Firebase ও Firestore Rules পরীক্ষা করুন।","err")}
- finally{btn.disabled=false;btn.textContent="ওয়েবসাইটে অর্ডার জমা দিন"}
+ finally{btn.disabled=false;btn.textContent="অর্ডার করুন"}
 };
 window.addEventListener("load",()=>{loadProducts();loadGreeting()});
 </script>
