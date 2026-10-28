@@ -35,11 +35,11 @@ footer{text-align:center;color:#7a867c;font-size:12px;padding:18px}
 /* Always-floating icon-only share button */
 #shareFab.floating-share { position:fixed !important; right:16px !important; bottom:18px !important; left:auto !important; top:auto !important; width:56px !important; height:56px !important; min-width:56px !important; min-height:56px !important; padding:0 !important; border-radius:50% !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:99999 !important; background:#16834a !important; color:#fff !important; box-shadow:0 7px 20px #123d2b55 !important; }
 #shareFab svg { width:25px !important; height:25px !important; flex:none !important; }
-.top-nav { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:14px 0; }
+.top-nav { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:14px 0; }
 .top-nav button { border:1px solid var(--line); border-radius:12px; padding:11px 5px; background:#fff; color:var(--forest); font-weight:800; font-size:13px; }
 .top-nav button.active { background:var(--forest); color:#fff; }
 #cancellation-policy { margin-top:16px; }
-@media(max-width:380px){.top-nav button{font-size:12px;padding:10px 2px}}
+@media(max-width:520px){.top-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.top-nav button{font-size:12px;padding:10px 4px}}
 
 
 /* Jyoti Home Delivery: gentle, lightweight animations */
@@ -93,7 +93,7 @@ button:active, .btn:active, .action:active {
 <body>
 <header><div><div class="brand-mark">🍱</div><div class="eyebrow">ঘরোয়া খাবার • প্রতিদিনের যত্ন</div><h1>জ্যোতি হোম ডেলিভারি</h1><p>ঘরের স্বাদ, আপনার দরজায় — কাটোয়া</p></div></header>
 <main>
-<nav class="top-nav" aria-label="প্রধান মেনু"><button id="tabHome" class="active" type="button" onclick="showTopTab('home')">🏠 Home</button><button id="tabAbout" type="button" onclick="showTopTab('about')">ℹ️ About Us</button><button id="tabPolicy" type="button" onclick="showTopTab('policy')">📝 Cancellation Policy</button></nav>
+<nav class="top-nav" aria-label="প্রধান মেনু"><button id="tabHome" class="active" type="button" onclick="showTopTab('home')">🍽️ মেনু</button><button id="tabSubscription" type="button" onclick="showTopTab('subscription')">🍱 মাসিক সাবস্ক্রিপশন</button><button id="tabAbout" type="button" onclick="showTopTab('about')">ℹ️ আমাদের সম্পর্কে</button><button id="tabPolicy" type="button" onclick="showTopTab('policy')">📋 ক্যান্সেলেশন পলিসি</button></nav>
 <div id="notice" class="status hidden"></div>
 <section id="shop">
  <div class="steps" style="grid-template-columns:repeat(4,1fr)"><div id="s1" class="step active">1 · মেনু</div><div id="s2" class="step">2 · বিল</div><div id="s3" class="step">3 · স্লট</div><div id="s4" class="step">4 · ঠিকানা</div></div>
@@ -114,6 +114,15 @@ button:active, .btn:active, .action:active {
  <div class="field full"><label for="landmark">ল্যান্ডমার্ক *</label><input id="landmark" required maxlength="150" placeholder="কাছের পরিচিত জায়গা"></div>
  <div class="field"><label>শহর</label><input value="কাটোয়া" readonly></div><div class="field"><label>পিনকোড</label><input value="713130" readonly></div>
  </div><button id="placeOrderBtn" class="action primary" type="submit">অর্ডার করুন</button></form><button class="action secondary" onclick="showPage('page-slot',3)">← ফিরে যান</button></section>
+</section>
+<section id="monthly-subscription" class="info-card hidden">
+<h2>🍱 মাসিক খাবারের সাবস্ক্রিপশন</h2>
+<p>নিয়মিত ঘরোয়া খাবার পাওয়ার সুবিধা খুব শীঘ্রই আসছে।</p>
+<div class="note" style="text-align:center;padding:24px;margin-top:16px">
+  <div style="font-size:34px;margin-bottom:6px">✨ 🍱 ✨</div>
+  <b style="font-size:24px;letter-spacing:1px">COMING SOON</b>
+  <p>জ্যোতি হোম ডেলিভারির মাসিক খাবারের পরিষেবা সম্পর্কে জানতে আমাদের ওয়েবসাইটে নজর রাখুন।</p>
+</div>
 </section>
 <section id="about-us" class="info-card hidden"><h2>❤️ About Us — আমাদের সম্পর্কে</h2>
 <p>জ্যোতি হোম ডেলিভারির লক্ষ্য কাটোয়া শহরের মানুষের জন্য খাবার অর্ডার করা সহজ ও সুবিধাজনক করা। আপনার পছন্দের খাবার, সহজ অর্ডার এবং আন্তরিক পরিষেবা—এই নিয়েই আমাদের ছোট্ট উদ্যোগ।</p>
@@ -282,14 +291,31 @@ function renderMenu(){
 }
 window.changeQty=(id,delta)=>{const p=products.find(x=>x.id===id);if(!p)return;if(!storeIsOpen){notify("দোকান এখন বন্ধ।","err");return}if(p.outOfStock&&delta>0){notify("এই আইটেমটি আউট অফ স্টক।","err");return}let min=p.required?1:0;quantities[id]=Math.max(min,Math.min(Number(p.stock||0),Number(quantities[id]||0)+delta));renderMenu()};
 window.showTopTab=(tab)=>{
- const shop=$("shop"), success=$("orderSuccess"), about=$("about-us"), contact=$("contact-us"), policy=$("cancellation-policy");
- ["tabHome","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active"));
- if(tab==="home") { $("tabHome").classList.add("active"); about.classList.add("hidden"); contact.classList.add("hidden"); policy.classList.add("hidden"); if(success.classList.contains("hidden")) shop.classList.remove("hidden"); else { shop.classList.add("hidden"); success.classList.remove("hidden"); } }
- else if(tab==="about") { $("tabAbout").classList.add("active"); shop.classList.add("hidden"); success.classList.add("hidden"); policy.classList.add("hidden"); about.classList.remove("hidden"); contact.classList.remove("hidden"); }
- else { $("tabPolicy").classList.add("active"); shop.classList.add("hidden"); success.classList.add("hidden"); about.classList.add("hidden"); contact.classList.add("hidden"); policy.classList.remove("hidden"); }
- window.scrollTo({top:0,behavior:"smooth"});
+  const shop=$("shop"), success=$("orderSuccess"), about=$("about-us"), contact=$("contact-us"), policy=$("cancellation-policy"), subscription=$("monthly-subscription");
+  ["tabHome","tabSubscription","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active"));
+  [shop,success,about,contact,policy,subscription].forEach(el=>el.classList.add("hidden"));
+  if(tab==="home") {
+    $("tabHome").classList.add("active");
+    if(success.dataset.showing==="yes") {
+      success.classList.remove("hidden");
+      policy.classList.remove("hidden");
+    } else {
+      shop.classList.remove("hidden");
+    }
+  } else if(tab==="subscription") {
+    $("tabSubscription").classList.add("active");
+    subscription.classList.remove("hidden");
+  } else if(tab==="about") {
+    $("tabAbout").classList.add("active");
+    about.classList.remove("hidden");
+    contact.classList.remove("hidden");
+  } else {
+    $("tabPolicy").classList.add("active");
+    policy.classList.remove("hidden");
+  }
+  window.scrollTo({top:0,behavior:"smooth"});
 };
-window.backToShop=()=>{ $("orderSuccess").classList.add("hidden"); $("cancellation-policy").classList.add("hidden"); $("shop").classList.remove("hidden"); $("about-us").classList.add("hidden"); $("contact-us").classList.add("hidden"); ["tabHome","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active")); $("tabHome").classList.add("active"); showPage("page-menu",1); };
+window.backToShop=()=>{ $("orderSuccess").classList.add("hidden"); $("orderSuccess").dataset.showing=""; $("cancellation-policy").classList.add("hidden"); $("shop").classList.remove("hidden"); $("about-us").classList.add("hidden"); $("contact-us").classList.add("hidden"); ["tabHome","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active")); $("tabHome").classList.add("active"); showPage("page-menu",1); };
 window.showPage=(id,n)=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");[1,2,3,4].forEach(i=>$("s"+i).classList.toggle("active",i===n));window.scrollTo({top:0,behavior:"smooth"})};
 window.continueToAddress=()=>{const selected=document.querySelector('input[name="deliverySlot"]:checked');if(!selected){notify("আগে একটি ডেলিভারি স্লট বেছে নিন।","err");return}showPage("page-address",4)};
 window.toggleShareMenu=()=>{$("shareMenu").classList.toggle("hidden")};
