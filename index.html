@@ -112,6 +112,37 @@ button:active, .btn:active, .action:active {
   100% { background-position: -120% 0; }
 }
 
+
+/* Firebase menu loading skeleton */
+.menu-skeleton {
+  display:flex; align-items:center; gap:12px;
+  min-height:98px; padding:11px;
+  background:#fff; border:1px solid var(--line);
+  border-radius:16px;
+}
+.skeleton-block {
+  background:linear-gradient(100deg,#edf0e9 25%,#f8faf5 42%,#edf0e9 65%);
+  background-size:220% 100%;
+  animation:menuSkeletonShimmer 1.25s ease-in-out infinite;
+  border-radius:9px;
+}
+.skeleton-photo { width:80px; height:75px; flex:none; border-radius:12px; }
+.skeleton-lines { flex:1; display:grid; gap:9px; }
+.skeleton-line { height:12px; width:75%; }
+.skeleton-line.short { width:38%; height:16px; }
+.skeleton-qty { width:82px; height:38px; flex:none; }
+@keyframes menuSkeletonShimmer {
+  0% { background-position:100% 0; }
+  100% { background-position:-120% 0; }
+}
+@media(max-width:450px) {
+  .skeleton-photo { width:65px; height:65px; }
+  .skeleton-qty { width:70px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .skeleton-block { animation:none; }
+}
+
 </style>
 </head>
 <body>
@@ -276,31 +307,48 @@ function formatOrderDate(o){
  if(!d || Number.isNaN(d.getTime())) return "তারিখ/সময় নেই (পুরোনো অর্ডার)";
  return new Intl.DateTimeFormat("bn-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true,timeZone:"Asia/Kolkata"}).format(d);
 }
+function renderMenuSkeleton(){
+  $("items").innerHTML=Array.from({length:6},()=>`
+    <div class="menu-skeleton" aria-hidden="true">
+      <div class="skeleton-block skeleton-photo"></div>
+      <div class="skeleton-lines">
+        <div class="skeleton-block skeleton-line"></div>
+        <div class="skeleton-block skeleton-line short"></div>
+        <div class="skeleton-block skeleton-line"></div>
+      </div>
+      <div class="skeleton-block skeleton-qty"></div>
+    </div>
+  `).join("");
+}
+
 async function loadProducts(){
-  const menuBox=$("items");
+  renderMenuSkeleton();
   try{
     let snap;
     try{
-      // Preferred query: products ordered by the configured sort field.
       snap=await getDocs(query(collection(db,"products"),orderBy("sort")));
     }catch(firstError){
       console.warn("Sorted product query failed; trying a basic query.",firstError);
       snap=await getDocs(collection(db,"products"));
     }
-    const firebaseProducts=snap.docs.map(d=>({id:d.id,...d.data()}))
+
+    products=snap.docs.map(d=>({id:d.id,...d.data()}))
       .filter(p=>p.active!==false)
       .sort((a,b)=>(Number(a.sort)||0)-(Number(b.sort)||0));
 
-    // If Firebase has products, replace the instant starter menu with live data.
-    // If the collection is empty, keep the starter menu visible.
-    if(firebaseProducts.length){
-      products=firebaseProducts;
-      products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
-      renderMenu();
+    if(!products.length){
+      $("items").innerHTML='<div class="card">মেনুতে এখনও কোনো খাবার যোগ করা হয়নি।</div>';
+      return;
     }
+
+    products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
+    renderMenu();
   }catch(e){
-    console.error("Menu background refresh error:",e);
-    // Do not erase the already-visible starter menu if Firebase is offline or denied.
+    console.error("Menu loading error:",e);
+    let msg="মেনু লোড হয়নি। ইন্টারনেট সংযোগ এবং Firebase Firestore Rules পরীক্ষা করুন।";
+    if(e?.code==="permission-denied")msg="Firebase অনুমতি দেয়নি (permission-denied)। Firestore Rules-এ products পড়ার অনুমতি পরীক্ষা করুন।";
+    else if(e?.code==="unavailable")msg="Firebase সার্ভার এখন পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।";
+    $("items").innerHTML='<div class="card"><b>⚠️ মেনু লোড করা যায়নি</b><p>'+escapeHtml(msg)+'</p><button class="action primary" type="button" onclick="loadProducts()">আবার চেষ্টা করুন</button></div>';
   }
 }
 function renderMenu(){
@@ -366,10 +414,9 @@ window.submitOrder=async ev=>{
  }catch(e){console.error(e);notify("অর্ডার জমা হয়নি। ইন্টারনেট, Firebase ও Firestore Rules পরীক্ষা করুন।","err")}
  finally{btn.disabled=false;btn.textContent="অর্ডার করুন"}
 };
-// Render the starter menu immediately; Firebase updates it in the background.
-products=initialProducts.map(p=>({...p}));
-products.forEach(p=>{quantities[p.id]=p.required?1:0});
-renderMenu();
+// Show only skeleton placeholders until the Firebase menu is received.
+products=[];
+renderMenuSkeleton();
 loadProducts();
 loadGreeting();
 </script>
