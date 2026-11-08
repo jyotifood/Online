@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="bn">
-<head >
-  <meta name="google-site-verification" content="z96J_DCW4Ev646PbQ1wtxQJdAMo9vK-NWukT4OzZlmg" />
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#173d2c">
@@ -89,6 +88,30 @@ button:active, .btn:active, .action:active {
   }
 }
 
+
+/* Instant menu + image skeleton; no tap blink in menu quantity controls */
+#items .item, #items .qty, #items .qty button {
+  animation: none !important;
+  transition: none !important;
+}
+#items .qty button:hover, #items .qty button:active {
+  transform: none !important;
+  filter: none !important;
+}
+#items .food-icon {
+  background: linear-gradient(100deg,#edf0e9 25%,#f8faf5 40%,#edf0e9 65%);
+  background-size: 220% 100%;
+  animation: menuShimmer 1.35s ease-in-out infinite;
+}
+#items .food-icon.loaded {
+  animation: none;
+  background: #edf0e9;
+}
+@keyframes menuShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -120% 0; }
+}
+
 </style>
 </head>
 <body>
@@ -98,7 +121,7 @@ button:active, .btn:active, .action:active {
 <div id="notice" class="status hidden"></div>
 <section id="shop">
  <div class="steps" style="grid-template-columns:repeat(4,1fr)"><div id="s1" class="step active">1 · মেনু</div><div id="s2" class="step">2 · বিল</div><div id="s3" class="step">3 · স্লট</div><div id="s4" class="step">4 · ঠিকানা</div></div>
- <section id="page-menu" class="page active"><div id="storeClosedNotice" class="status err hidden">দোকান এখন বন্ধ। আপাতত নতুন অর্ডার নেওয়া হচ্ছে না।</div><h2>🍽️ খাবারের তালিকা</h2><p class="sub">সবজি ভাত বাধ্যতামূলক; অন্য খাবার ইচ্ছেমতো যোগ করুন।</p><div class="note">💵 <b>Pay on Delivery</b> — খাবার হাতে পেয়ে পেমেন্ট করুন। <b>No Extra Cost</b> — ডেলিভারি ফি ₹0, প্যাকেজিং চার্জ ₹0।</div><div id="items" class="items"><p>মেনু লোড হচ্ছে…</p></div><button class="action primary" onclick="showBill()">নেক্সট: বিল দেখুন →</button></section>
+ <section id="page-menu" class="page active"><div id="storeClosedNotice" class="status err hidden">দোকান এখন বন্ধ। আপাতত নতুন অর্ডার নেওয়া হচ্ছে না।</div><h2>🍽️ খাবারের তালিকা</h2><p class="sub">সবজি ভাত বাধ্যতামূলক; অন্য খাবার ইচ্ছেমতো যোগ করুন।</p><div class="note">💵 <b>Pay on Delivery</b> — খাবার হাতে পেয়ে পেমেন্ট করুন। <b>No Extra Cost</b> — ডেলিভারি ফি ₹0, প্যাকেজিং চার্জ ₹0।</div><div id="items" class="items" aria-live="polite"></div><button class="action primary" onclick="showBill()">নেক্সট: বিল দেখুন →</button></section>
  <section id="page-bill" class="page"><h2>আপনার অর্ডারের বিল</h2><p class="sub">অর্ডার নিশ্চিত করার আগে খাবার ও মোট দাম দেখে নিন।</p><div class="card" id="billItems"></div><div class="card"><div class="total"><span>খাবারের দাম</span><b id="billFood">₹55</b></div><div class="total"><span>ডেলিভারি ফি</span><b>₹0</b></div><div class="total"><span>প্যাকেজিং চার্জ</span><b>₹0</b></div><div class="total grand"><span>সর্বমোট</span><strong id="billTotal">₹55</strong></div></div><button class="action primary" onclick="showPage('page-slot',3)">নেক্সট: ডেলিভারি স্লট →</button><button class="action secondary" onclick="showPage('page-menu',1)">← ফিরে যান</button></section>
  <section id="page-slot" class="page"><h2>🕒 ডেলিভারি স্লট বেছে নিন</h2><p class="sub">আপনার সুবিধামতো একটি সময় নির্বাচন করুন।</p><div class="card"><div class="slot-options">
  <label class="slot-option"><input type="radio" name="deliverySlot" value="12 PM - 1 PM" required> 12 PM – 1 PM</label>
@@ -167,15 +190,15 @@ const firebaseConfig={
 };
 const app=initializeApp(firebaseConfig),db=getFirestore(app);
 const initialProducts=[
- {name:"সবজি ভাত",price:55,stock:100,required:true,image:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:1},
- {name:"এক্সট্রা ভাত",price:7,stock:100,required:false,image:"https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:2},
- {name:"ডিমের ওমলেট",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:3},
- {name:"ডিমের কারি",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:4},
- {name:"মাছ",price:32,stock:100,required:false,image:"https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:5},
- {name:"চিকেন 2 পিস",price:40,stock:100,required:false,image:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:6},
- {name:"জলের বোতল",price:10,stock:100,required:false,image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:7},
- {name:"টক দই 50 গ্রাম",price:12,stock:100,required:false,image:"https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:8},
- {name:"পোস্তর বড়া",price:25,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:9}
+ {id:"default-veg-rice",name:"সবজি ভাত",price:55,stock:100,required:true,image:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:1},
+ {id:"default-extra-rice",name:"এক্সট্রা ভাত",price:7,stock:100,required:false,image:"https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:2},
+ {id:"default-omelette",name:"ডিমের ওমলেট",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:3},
+ {id:"default-egg-curry",name:"ডিমের কারি",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:4},
+ {id:"default-fish",name:"মাছ",price:32,stock:100,required:false,image:"https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:5},
+ {id:"default-chicken",name:"চিকেন 2 পিস",price:40,stock:100,required:false,image:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:6},
+ {id:"default-water",name:"জলের বোতল",price:10,stock:100,required:false,image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:7},
+ {id:"default-curd",name:"টক দই 50 গ্রাম",price:12,stock:100,required:false,image:"https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:8},
+ {id:"default-posto-bora",name:"পোস্তর বড়া",price:25,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:9}
 ];
 let products=[],quantities={},isAdmin=false,storeIsOpen=true;
 const $=id=>document.getElementById(id);
@@ -254,41 +277,35 @@ function formatOrderDate(o){
  return new Intl.DateTimeFormat("bn-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true,timeZone:"Asia/Kolkata"}).format(d);
 }
 async function loadProducts(){
- const menuBox=$("items");
- menuBox.innerHTML='<div class="card">🍽️ মেনু লোড হচ্ছে…</div>';
- products=[];
- try{
-   let snap;
-   try{
-     // Preferred query: products ordered by the configured sort field.
-     snap=await getDocs(query(collection(db,"products"),orderBy("sort")));
-   }catch(firstError){
-     console.warn("Sorted product query failed; trying a basic query.",firstError);
-     // Fallback: this can still work if the sort field/query is the issue.
-     snap=await getDocs(collection(db,"products"));
-   }
-   products=snap.docs.map(d=>({id:d.id,...d.data()}));
-   if(!products.length){
-     menuBox.innerHTML='<div class="card">মেনুতে এখনও খাবার যোগ করা হয়নি। অ্যাডমিন প্যানেলে লগইন করে “মেনু ও স্টক” অংশ থেকে ডিফল্ট মেনু তৈরি করুন।</div>';
-     return;
-   }
-   products=products.filter(p=>p.active!==false);
-   products.sort((a,b)=>(Number(a.sort)||0)-(Number(b.sort)||0));
-   products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
-   renderMenu();
- }catch(e){
-   console.error("Menu loading error:",e);
-   let msg="মেনু লোড হয়নি। ইন্টারনেট সংযোগ এবং Firebase Firestore Rules পরীক্ষা করুন।";
-   if(e?.code==="permission-denied")msg="Firebase অনুমতি দেয়নি (permission-denied)। Firestore Rules-এ products পড়ার অনুমতি পরীক্ষা করুন।";
-   else if(e?.code==="unavailable")msg="Firebase সার্ভার এখন পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।";
-   else if(e?.code==="unauthenticated")msg="Firebase সংযোগ যাচাই করা যায়নি। পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।";
-   menuBox.innerHTML='<div class="card"><b>⚠️ মেনু লোড করা যায়নি</b><p>'+escapeHtml(msg)+'</p><button class="action primary" type="button" onclick="loadProducts()">আবার চেষ্টা করুন</button></div>';
-   notify(msg,"err");
- }
+  const menuBox=$("items");
+  try{
+    let snap;
+    try{
+      // Preferred query: products ordered by the configured sort field.
+      snap=await getDocs(query(collection(db,"products"),orderBy("sort")));
+    }catch(firstError){
+      console.warn("Sorted product query failed; trying a basic query.",firstError);
+      snap=await getDocs(collection(db,"products"));
+    }
+    const firebaseProducts=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .filter(p=>p.active!==false)
+      .sort((a,b)=>(Number(a.sort)||0)-(Number(b.sort)||0));
+
+    // If Firebase has products, replace the instant starter menu with live data.
+    // If the collection is empty, keep the starter menu visible.
+    if(firebaseProducts.length){
+      products=firebaseProducts;
+      products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
+      renderMenu();
+    }
+  }catch(e){
+    console.error("Menu background refresh error:",e);
+    // Do not erase the already-visible starter menu if Firebase is offline or denied.
+  }
 }
 function renderMenu(){
- const active=products.filter(p=>p.active!==false);
- $("items").innerHTML=active.map(p=>`<div class="item"><img class="food-icon" src="${escapeHtml(p.image||"")}" alt="" onerror="this.style.visibility='hidden'"><div class="info"><div class="name">${escapeHtml(p.name)}</div><div class="price">${money(p.price)}</div><div class="stock">${p.outOfStock||p.stock<=0?"আজ স্টক শেষ":(p.stock<20?"স্টক: "+p.stock:"")}</div>${p.required?'<span class="pill">বাধ্যতামূলক</span>':""}</div><div class="qty"><button type="button" aria-label="কম" onclick="changeQty('${p.id}',-1)" ${p.required&&quantities[p.id]<=1?"disabled":""}>−</button><span>${quantities[p.id]||0}</span><button type="button" aria-label="বাড়ান" onclick="changeQty('${p.id}',1)" ${(p.outOfStock||p.stock<=0||(quantities[p.id]||0)>=p.stock||!storeIsOpen)?"disabled":""}>+</button></div></div>`).join("");
+  const active=products.filter(p=>p.active!==false);
+  $("items").innerHTML=active.map(p=>`<div class="item"><img class="food-icon" src="${escapeHtml(p.image||"")}" alt="${escapeHtml(p.name||"খাবার")}" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.classList.add('loaded');this.style.visibility='hidden'"><div class="info"><div class="name">${escapeHtml(p.name)}</div><div class="price">${money(p.price)}</div><div class="stock">${p.outOfStock||p.stock<=0?"আজ স্টক শেষ":(p.stock<20?"স্টক: "+p.stock:"")}</div>${p.required?'<span class="pill">বাধ্যতামূলক</span>':""}</div><div class="qty"><button type="button" aria-label="কম" onclick="changeQty('${p.id}',-1)" ${p.required&&quantities[p.id]<=1?"disabled":""}>−</button><span>${quantities[p.id]||0}</span><button type="button" aria-label="বাড়ান" onclick="changeQty('${p.id}',1)" ${(p.outOfStock||p.stock<=0||(quantities[p.id]||0)>=p.stock||!storeIsOpen)?"disabled":""}>+</button></div></div>`).join("");
 }
 window.changeQty=(id,delta)=>{const p=products.find(x=>x.id===id);if(!p)return;if(!storeIsOpen){notify("দোকান এখন বন্ধ।","err");return}if(p.outOfStock&&delta>0){notify("এই আইটেমটি আউট অফ স্টক।","err");return}let min=p.required?1:0;quantities[id]=Math.max(min,Math.min(Number(p.stock||0),Number(quantities[id]||0)+delta));renderMenu()};
 window.showTopTab=(tab)=>{
@@ -349,6 +366,11 @@ window.submitOrder=async ev=>{
  }catch(e){console.error(e);notify("অর্ডার জমা হয়নি। ইন্টারনেট, Firebase ও Firestore Rules পরীক্ষা করুন।","err")}
  finally{btn.disabled=false;btn.textContent="অর্ডার করুন"}
 };
-window.addEventListener("load",()=>{loadProducts();loadGreeting()});
+// Render the starter menu immediately; Firebase updates it in the background.
+products=initialProducts.map(p=>({...p}));
+products.forEach(p=>{quantities[p.id]=p.required?1:0});
+renderMenu();
+loadProducts();
+loadGreeting();
 </script>
 </body></html>
