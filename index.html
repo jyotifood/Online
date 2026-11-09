@@ -41,62 +41,81 @@ footer{text-align:center;color:#7a867c;font-size:12px;padding:18px}
 #cancellation-policy { margin-top:16px; }
 @media(max-width:520px){.top-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.top-nav button{font-size:12px;padding:10px 4px}}
 
+/* Sliding Banner & Skeleton Styles */
+.banner-container {
+  width: 100%;
+  height: 190px;
+  border-radius: 17px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 17px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.banner-skeleton {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(100deg,#edf0e9 25%,#f8faf5 42%,#edf0e9 65%);
+  background-size: 220% 100%;
+  animation: bannerSkeletonShimmer 1.25s ease-in-out infinite;
+}
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.slide-item {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slide-item.active {
+  opacity: 1;
+  z-index: 2;
+}
+.slide-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.slider-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+}
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.slider-dot.active {
+  background: var(--gold);
+  border-color: #fff;
+}
+@keyframes bannerSkeletonShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -120% 0; }
+}
+@media(max-width:450px) {
+  .banner-container { height: 150px; }
+}
 
-/* Jyoti Home Delivery: gentle, lightweight animations */
-@keyframes jyotiFadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes jyotiSoftPulse {
-  0%, 100% { box-shadow: 0 5px 18px rgba(0,0,0,.12); }
-  50% { box-shadow: 0 7px 23px rgba(255,126,35,.30); }
-}
-@keyframes jyotiFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-@keyframes jyotiShine {
-  0% { background-position: -180% 0; }
-  100% { background-position: 180% 0; }
-}
-body { animation: jyotiFadeUp .55s ease-out both; }
-header, .header, .hero, .card, .panel, .section, .menu-item, .product-card {
-  animation: jyotiFadeUp .6s ease-out both;
-}
-button, .btn, .action {
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-}
-button:hover, .btn:hover, .action:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.04);
-}
-button:active, .btn:active, .action:active {
-  transform: scale(.97);
-}
-#shareBtn, .share-btn, .floating-share {
-  animation: jyotiSoftPulse 2.8s ease-in-out infinite;
-}
-#shareBtn span:first-child, .share-btn span:first-child, .floating-share span:first-child {
-  animation: jyotiFloat 2.2s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: .01ms !important;
-  }
-}
-
-
-/* Instant menu + image skeleton; no tap blink in menu quantity controls */
+/* Instant menu + image skeleton */
 #items .item, #items .qty, #items .qty button {
   animation: none !important;
   transition: none !important;
-}
-#items .qty button:hover, #items .qty button:active {
-  transform: none !important;
-  filter: none !important;
 }
 #items .food-icon {
   background: linear-gradient(100deg,#edf0e9 25%,#f8faf5 40%,#edf0e9 65%);
@@ -112,8 +131,6 @@ button:active, .btn:active, .action:active {
   100% { background-position: -120% 0; }
 }
 
-
-/* Firebase menu loading skeleton */
 .menu-skeleton {
   display:flex; align-items:center; gap:12px;
   min-height:98px; padding:11px;
@@ -135,14 +152,6 @@ button:active, .btn:active, .action:active {
   0% { background-position:100% 0; }
   100% { background-position:-120% 0; }
 }
-@media(max-width:450px) {
-  .skeleton-photo { width:65px; height:65px; }
-  .skeleton-qty { width:70px; }
-}
-@media(prefers-reduced-motion:reduce) {
-  .skeleton-block { animation:none; }
-}
-
 </style>
 </head>
 <body>
@@ -151,6 +160,7 @@ button:active, .btn:active, .action:active {
 <nav class="top-nav" aria-label="প্রধান মেনু"><button id="tabHome" class="active" type="button" onclick="showTopTab('home')">🍽️ মেনু</button><button id="tabSubscription" type="button" onclick="showTopTab('subscription')">🍱 মাসিক সাবস্ক্রিপশন</button><button id="tabAbout" type="button" onclick="showTopTab('about')">ℹ️ আমাদের সম্পর্কে</button><button id="tabPolicy" type="button" onclick="showTopTab('policy')">📋 ক্যান্সেলেশন পলিসি</button></nav>
 <div id="notice" class="status hidden"></div>
 <section id="shop">
+ <div id="bannerContainer" class="banner-container"><div class="banner-skeleton" aria-hidden="true"></div></div>
  <div class="steps" style="grid-template-columns:repeat(4,1fr)"><div id="s1" class="step active">1 · মেনু</div><div id="s2" class="step">2 · বিল</div><div id="s3" class="step">3 · স্লট</div><div id="s4" class="step">4 · ঠিকানা</div></div>
  <section id="page-menu" class="page active"><div id="storeClosedNotice" class="status err hidden">দোকান এখন বন্ধ। আপাতত নতুন অর্ডার নেওয়া হচ্ছে না।</div><h2>🍽️ খাবারের তালিকা</h2><p class="sub">সবজি ভাত বাধ্যতামূলক; অন্য খাবার ইচ্ছেমতো যোগ করুন।</p><div class="note">💵 <b>Pay on Delivery</b> — খাবার হাতে পেয়ে পেমেন্ট করুন। <b>No Extra Cost</b> — ডেলিভারি ফি ₹0, প্যাকেজিং চার্জ ₹0।</div><div id="items" class="items" aria-live="polite"></div><button class="action primary" onclick="showBill()">নেক্সট: বিল দেখুন →</button></section>
  <section id="page-bill" class="page"><h2>আপনার অর্ডারের বিল</h2><p class="sub">অর্ডার নিশ্চিত করার আগে খাবার ও মোট দাম দেখে নিন।</p><div class="card" id="billItems"></div><div class="card"><div class="total"><span>খাবারের দাম</span><b id="billFood">₹55</b></div><div class="total"><span>ডেলিভারি ফি</span><b>₹0</b></div><div class="total"><span>প্যাকেজিং চার্জ</span><b>₹0</b></div><div class="total grand"><span>সর্বমোট</span><strong id="billTotal">₹55</strong></div></div><button class="action primary" onclick="showPage('page-slot',3)">নেক্সট: ডেলিভারি স্লট →</button><button class="action secondary" onclick="showPage('page-menu',1)">← ফিরে যান</button></section>
@@ -187,7 +197,7 @@ button:active, .btn:active, .action:active {
 <section id="contact-us" class="info-card hidden"><h2>📞 Contact Us — যোগাযোগ</h2><p>অর্ডার বা পরিষেবা সংক্রান্ত প্রশ্নের জন্য WhatsApp-এ যোগাযোগ করুন।</p>
 <a class="action primary" style="display:block;text-align:center;text-decoration:none" href="https://wa.me/917001591627" target="_blank" rel="noopener">WhatsApp: 7001591627</a>
 <h3 style="color:var(--forest)">📍 কাটোয়া শহরের মানচিত্র</h3><iframe class="map-frame" title="কাটোয়া শহরের মানচিত্র" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Katwa,West+Bengal,India&output=embed"></iframe>
-<p><a href="https://www.google.com/maps/search/?api=1&query=Katwa%2C+West%2BBengal%2C%2BIndia" target="_blank" rel="noopener">Google Maps-এ কাটোয়া দেখুন ↗</a></p></section>
+<p><a href="https://www.google.com/maps/search/?api=1&query=Katwa%2C+West+Bengal%2C%2BIndia" target="_blank" rel="noopener">Google Maps-এ কাটোয়া দেখুন ↗</a></p></section>
 <section id="cancellation-policy" class="info-card hidden"><h2>📝 Cancellation Policy — অর্ডার বাতিলের নীতি</h2>
 <p>আমরা একটি ছোট সংস্থা এবং প্রতিটি অর্ডারের জন্য খাবার ও প্রস্তুতির পরিকল্পনা করি। তাই অর্ডার দেওয়ার পর অনুগ্রহ করে অর্ডারটি বাতিল না করার জন্য আমাদের অনুরোধ রইল।</p>
 <p>জরুরি কারণে পরিবর্তন বা বাতিলের প্রয়োজন হলে যত তাড়াতাড়ি সম্ভব WhatsApp-এ যোগাযোগ করুন। খাবার প্রস্তুত হয়ে গেলে অর্ডার বাতিল করা সম্ভব নাও হতে পারে।</p>
@@ -200,16 +210,12 @@ button:active, .btn:active, .action:active {
  <p>আপনার অর্ডার নম্বর:</p><p><b id="successOrderId"></b></p>
  <button class="action secondary" type="button" onclick="backToShop()">দোকানে ফিরুন</button>
 </section>
-
-
 </main><footer><b>🍱 জ্যোতি হোম ডেলিভারি</b><br>ঘরোয়া স্বাদের খাবার • কাটোয়া 713130</footer>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {getFirestore,collection,doc,getDocs,getDoc,addDoc,setDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// Firebase web config from the project supplied by the owner.
-// Web API keys are identifiers, not admin passwords. Firestore Rules must be configured as described in the README.
 const firebaseConfig={
  apiKey:"AIzaSyCUyOK-932pbkuSaJ8WWDnmgulE_Qbsk5g",
  authDomain:"jyotifoodonline.firebaseapp.com",
@@ -220,23 +226,13 @@ const firebaseConfig={
  measurementId:"G-2Z8GNW4VR0"
 };
 const app=initializeApp(firebaseConfig),db=getFirestore(app);
-const initialProducts=[
- {id:"default-veg-rice",name:"সবজি ভাত",price:55,stock:100,required:true,image:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:1},
- {id:"default-extra-rice",name:"এক্সট্রা ভাত",price:7,stock:100,required:false,image:"https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:2},
- {id:"default-omelette",name:"ডিমের ওমলেট",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:3},
- {id:"default-egg-curry",name:"ডিমের কারি",price:18,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:4},
- {id:"default-fish",name:"মাছ",price:32,stock:100,required:false,image:"https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:5},
- {id:"default-chicken",name:"চিকেন 2 পিস",price:40,stock:100,required:false,image:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:6},
- {id:"default-water",name:"জলের বোতল",price:10,stock:100,required:false,image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:7},
- {id:"default-curd",name:"টক দই 50 গ্রাম",price:12,stock:100,required:false,image:"https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:8},
- {id:"default-posto-bora",name:"পোস্তর বড়া",price:25,stock:100,required:false,image:"https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=240&h=200&q=80",active:true,sort:9}
-];
-let products=[],quantities={},isAdmin=false,storeIsOpen=true;
+let products=[],quantities={},storeIsOpen=true,currentSlide=0,slideInterval=null,bannerImages=[];
 const $=id=>document.getElementById(id);
 function notify(msg,type="ok"){const n=$("notice");n.textContent=msg;n.className="status "+(type==="err"?"err":"ok");n.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>n.classList.add("hidden"),7000)}
 function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function money(n){return "₹"+Number(n||0)}
 const DEFAULT_GREETING="ধন্যবাদ! আপনার অর্ডার সফলভাবে জমা হয়েছে।";
+
 async function loadGreeting(){
  try{
    const snap=await getDoc(doc(db,"settings","orderGreeting"));
@@ -245,68 +241,87 @@ async function loadGreeting(){
    storeIsOpen=settings.storeIsOpen!==false;
    updateStoreStatusUI();
    $("successGreeting").textContent=msg;
-   if($("greetingText")) $("greetingText").value=msg;
  }catch(e){
    console.error("loadGreeting:",e);
    $("successGreeting").textContent=DEFAULT_GREETING;
-   if($("greetingText")) $("greetingText").value=DEFAULT_GREETING;
    updateStoreStatusUI();
-   if($("greetingStatus")) $("greetingStatus").textContent="আগের মেসেজ পড়া যায়নি: "+(e.code||e.message||"অজানা সমস্যা");
  }
 }
+
+async function loadBanners(){
+  try{
+    const snap=await getDoc(doc(db,"settings","banners"));
+    const data=snap.exists()?snap.data():{};
+    bannerImages=Array.isArray(data.images)&&data.images.length?data.images:[
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80"
+    ];
+    renderSlider();
+    startSliderTimer();
+  }catch(e){
+    console.error("loadBanners:",e);
+    bannerImages=[
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80"
+    ];
+    renderSlider();
+    startSliderTimer();
+  }
+}
+
+function renderSlider(){
+  const container=$("bannerContainer");
+  if(!bannerImages.length){
+    container.innerHTML='<div class="banner-skeleton"></div>';
+    return;
+  }
+  container.innerHTML=`
+    <div class="slider-wrapper">
+      ${bannerImages.map((img,idx)=>`
+        <div class="slide-item ${idx===0?'active':''}">
+          <img src="${escapeHtml(img)}" alt="ব্যানার ${idx+1}" loading="lazy" decoding="async">
+        </div>
+      `).join("")}
+      <div class="slider-dots">
+        ${bannerImages.map((_,idx)=>`
+          <div class="slider-dot ${idx===0?'active':''}" onclick="goToSlide(${idx})"></div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function startSliderTimer(){
+  if(slideInterval)clearInterval(slideInterval);
+  slideInterval=setInterval(()=>{
+    if(!bannerImages.length)return;
+    currentSlide=(currentSlide+1)%bannerImages.length;
+    updateSlideClasses();
+  },4000);
+}
+
+window.goToSlide=(idx)=>{
+  currentSlide=idx;
+  updateSlideClasses();
+  startSliderTimer();
+};
+
+function updateSlideClasses(){
+  const container=$("bannerContainer");
+  const slides=container.querySelectorAll(".slide-item");
+  const dots=container.querySelectorAll(".slider-dot");
+  slides.forEach((slide,idx)=>slide.classList.toggle("active",idx===currentSlide));
+  dots.forEach((dot,idx)=>dot.classList.toggle("active",idx===currentSlide));
+}
+
 function updateStoreStatusUI(){
- const t=$("storeStatusText"),b=$("storeToggleBtn");
- if(t){t.textContent=storeIsOpen?"দোকান এখন চালু — কাস্টমার অর্ডার করতে পারবেন।":"দোকান এখন বন্ধ — নতুন অর্ডার বন্ধ আছে।";t.className="status "+(storeIsOpen?"ok":"err");}
- if(b)b.textContent=storeIsOpen?"দোকান বন্ধ করুন":"দোকান চালু করুন";
  const n=$("storeClosedNotice");
  if(n)n.classList.toggle("hidden",storeIsOpen);
  const orderBtn=$("placeOrderBtn");
  if(orderBtn){orderBtn.disabled=!storeIsOpen;orderBtn.textContent=storeIsOpen?"অর্ডার করুন":"দোকান বন্ধ — অর্ডার নেওয়া হচ্ছে না";}
- const nextButtons=document.querySelectorAll('button[onclick="showBill()"],button[onclick="showPage(\'page-address\',3)"]');
- nextButtons.forEach(x=>x.disabled=!storeIsOpen);
 }
-window.toggleStoreStatus=async()=>{
- if(!auth.currentUser)return notify("প্রথমে অ্যাডমিন লগইন করুন।","err");
- const next=!storeIsOpen;
- const b=$("storeToggleBtn");if(b)b.disabled=true;
- try{
-  await setDoc(doc(db,"settings","orderGreeting"),{storeIsOpen:next,storeUpdatedAt:serverTimestamp()},{merge:true});
-  storeIsOpen=next;updateStoreStatusUI();notify(next?"দোকান চালু করা হয়েছে।":"দোকান বন্ধ করা হয়েছে।");
- }catch(e){console.error(e);notify("দোকানের অবস্থা বদলানো যায়নি: "+(e.code||e.message),"err")}
- finally{if(b)b.disabled=false}
-};
-window.saveGreeting=async()=>{
- if(!auth.currentUser)return notify("প্রথমে অ্যাডমিন লগইন করুন।","err");
- const message=$("greetingText").value.trim();
- if(!message)return notify("গ্রিটিং মেসেজ লিখুন।","err");
- const btn=document.querySelector('button[onclick="saveGreeting()"]');
- if(btn){btn.disabled=true;btn.textContent="সংরক্ষণ হচ্ছে…";}
- try{
-   await setDoc(doc(db,"settings","orderGreeting"),{message,updatedAt:serverTimestamp()},{merge:true});
-   $("successGreeting").textContent=message;
-   if($("greetingStatus")) $("greetingStatus").textContent="সর্বশেষ সংরক্ষণ সফল হয়েছে।";
-   notify("গ্রিটিং মেসেজ সংরক্ষণ হয়েছে।");
- }catch(e){
-   console.error("saveGreeting:",e);
-   const detail=e.code||e.message||"অজানা সমস্যা";
-   if($("greetingStatus")) $("greetingStatus").textContent="সংরক্ষণ হয়নি: "+detail;
-   notify("গ্রিটিং সংরক্ষণ হয়নি: "+detail,"err");
- }finally{
-   if(btn){btn.disabled=false;btn.textContent="গ্রিটিং সংরক্ষণ করুন";}
- }
-}
-function formatOrderDate(o){
- const raw=o.createdAt;
- let d=null;
- try{
-   if(raw && typeof raw.toDate==="function") d=raw.toDate();
-   else if(raw && typeof raw.seconds==="number") d=new Date(raw.seconds*1000);
-   else if(typeof raw==="string" || typeof raw==="number") d=new Date(raw);
-   if((!d || Number.isNaN(d.getTime())) && o.createdAtClient) d=new Date(o.createdAtClient);
- }catch(e){ if(o.createdAtClient) d=new Date(o.createdAtClient); }
- if(!d || Number.isNaN(d.getTime())) return "তারিখ/সময় নেই (পুরোনো অর্ডার)";
- return new Intl.DateTimeFormat("bn-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true,timeZone:"Asia/Kolkata"}).format(d);
-}
+
 function renderMenuSkeleton(){
   $("items").innerHTML=Array.from({length:6},()=>`
     <div class="menu-skeleton" aria-hidden="true">
@@ -324,58 +339,38 @@ function renderMenuSkeleton(){
 async function loadProducts(){
   renderMenuSkeleton();
   try{
-    let snap;
-    try{
-      snap=await getDocs(query(collection(db,"products"),orderBy("sort")));
-    }catch(firstError){
-      console.warn("Sorted product query failed; trying a basic query.",firstError);
-      snap=await getDocs(collection(db,"products"));
-    }
-
-    products=snap.docs.map(d=>({id:d.id,...d.data()}))
-      .filter(p=>p.active!==false)
-      .sort((a,b)=>(Number(a.sort)||0)-(Number(b.sort)||0));
-
-    if(!products.length){
-      $("items").innerHTML='<div class="card">মেনুতে এখনও কোনো খাবার যোগ করা হয়নি।</div>';
-      return;
-    }
-
+    let snap=await getDocs(query(collection(db,"products"),orderBy("sort"))).catch(()=>getDocs(collection(db,"products")));
+    products=snap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.active!==false).sort((a,b)=>(Number(a.sort)||0)-(Number(b.sort)||0));
+    if(!products.length){$("items").innerHTML='<div class="card">মেনুতে এখনও কোনো খাবার যোগ করা হয়নি।</div>';return;}
     products.forEach(p=>{if(quantities[p.id]==null)quantities[p.id]=p.required?1:0});
     renderMenu();
   }catch(e){
     console.error("Menu loading error:",e);
-    let msg="মেনু লোড হয়নি। ইন্টারনেট সংযোগ এবং Firebase Firestore Rules পরীক্ষা করুন।";
-    if(e?.code==="permission-denied")msg="Firebase অনুমতি দেয়নি (permission-denied)। Firestore Rules-এ products পড়ার অনুমতি পরীক্ষা করুন।";
-    else if(e?.code==="unavailable")msg="Firebase সার্ভার এখন পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।";
-    $("items").innerHTML='<div class="card"><b>⚠️ মেনু লোড করা যায়নি</b><p>'+escapeHtml(msg)+'</p><button class="action primary" type="button" onclick="loadProducts()">আবার চেষ্টা করুন</button></div>';
+    $("items").innerHTML='<div class="card"><b>⚠️ মেনু লোড করা যায়নি</b></div>';
   }
 }
+
 function renderMenu(){
   const active=products.filter(p=>p.active!==false);
   $("items").innerHTML=active.map(p=>`<div class="item"><img class="food-icon" src="${escapeHtml(p.image||"")}" alt="${escapeHtml(p.name||"খাবার")}" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.classList.add('loaded');this.style.visibility='hidden'"><div class="info"><div class="name">${escapeHtml(p.name)}</div><div class="price">${money(p.price)}</div><div class="stock">${p.outOfStock||p.stock<=0?"আজ স্টক শেষ":(p.stock<20?"স্টক: "+p.stock:"")}</div>${p.required?'<span class="pill">বাধ্যতামূলক</span>':""}</div><div class="qty"><button type="button" aria-label="কম" onclick="changeQty('${p.id}',-1)" ${p.required&&quantities[p.id]<=1?"disabled":""}>−</button><span>${quantities[p.id]||0}</span><button type="button" aria-label="বাড়ান" onclick="changeQty('${p.id}',1)" ${(p.outOfStock||p.stock<=0||(quantities[p.id]||0)>=p.stock||!storeIsOpen)?"disabled":""}>+</button></div></div>`).join("");
 }
+
 window.changeQty=(id,delta)=>{const p=products.find(x=>x.id===id);if(!p)return;if(!storeIsOpen){notify("দোকান এখন বন্ধ।","err");return}if(p.outOfStock&&delta>0){notify("এই আইটেমটি আউট অফ স্টক।","err");return}let min=p.required?1:0;quantities[id]=Math.max(min,Math.min(Number(p.stock||0),Number(quantities[id]||0)+delta));renderMenu()};
 window.showTopTab=(tab)=>{
   const shop=$("shop"), success=$("orderSuccess"), about=$("about-us"), contact=$("contact-us"), policy=$("cancellation-policy"), subscription=$("monthly-subscription");
   ["tabHome","tabSubscription","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active"));
   [shop,success,about,contact,policy,subscription].forEach(el=>el.classList.add("hidden"));
-  if(tab==="home") {
+  if(tab==="home"){
     $("tabHome").classList.add("active");
-    if(success.dataset.showing==="yes") {
-      success.classList.remove("hidden");
-      policy.classList.remove("hidden");
-    } else {
-      shop.classList.remove("hidden");
-    }
-  } else if(tab==="subscription") {
+    if(success.dataset.showing==="yes"){success.classList.remove("hidden");policy.classList.remove("hidden");}
+    else{shop.classList.remove("hidden");}
+  }else if(tab==="subscription"){
     $("tabSubscription").classList.add("active");
     subscription.classList.remove("hidden");
-  } else if(tab==="about") {
+  }else if(tab==="about"){
     $("tabAbout").classList.add("active");
-    about.classList.remove("hidden");
-    contact.classList.remove("hidden");
-  } else {
+    about.classList.remove("hidden");contact.classList.remove("hidden");
+  }else{
     $("tabPolicy").classList.add("active");
     policy.classList.remove("hidden");
   }
@@ -406,6 +401,7 @@ window.submitOrder=async ev=>{
    $("shop").classList.add("hidden");
    $("about-us").classList.add("hidden"); $("contact-us").classList.add("hidden");
    $("orderSuccess").classList.remove("hidden");
+   $("orderSuccess").dataset.showing="yes";
    $("cancellation-policy").classList.remove("hidden");
    ["tabHome","tabAbout","tabPolicy"].forEach(id=>$(id).classList.remove("active")); $("tabHome").classList.add("active");
    await loadGreeting();
@@ -414,9 +410,9 @@ window.submitOrder=async ev=>{
  }catch(e){console.error(e);notify("অর্ডার জমা হয়নি। ইন্টারনেট, Firebase ও Firestore Rules পরীক্ষা করুন।","err")}
  finally{btn.disabled=false;btn.textContent="অর্ডার করুন"}
 };
-// Show only skeleton placeholders until the Firebase menu is received.
-products=[];
+
 renderMenuSkeleton();
+loadBanners();
 loadProducts();
 loadGreeting();
 </script>
